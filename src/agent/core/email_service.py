@@ -15,8 +15,8 @@ class GmailServiceSMTP:
     def __init__(self):
         self.email = settings.ACCOUNT_GMAIL
         self.app_password = settings.PASSWORD_GMAIL
-        self.smtp_server = settings.SMPT_SERVER
-        self.smtp_port = settings.SMPT_PORT
+        self.smtp_server = settings.SMTP_SERVER
+        self.smtp_port = settings.SMTP_PORT
 
     def send_email(self, content: EmailContent) -> Dict[str, Any]:
         try:

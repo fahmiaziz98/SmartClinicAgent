@@ -1,4 +1,3 @@
-from langsmith import Client
 from typing_extensions import TypedDict
 from typing import Any, Callable, List, Annotated
 
@@ -19,10 +18,6 @@ from src.agent.tools import (
     cancel_doctor_appointment,
 )
 from src.agent.utils import create_tool_node_with_fallback
-
-
-# Initialize LangSmith client for tracing
-_ = Client()
 
 
 class State(TypedDict):
@@ -93,8 +88,8 @@ class AgentGraph:
 
         # The checkpointer allows the graph to persist its state,
         # creating a memory for the conversation.
-        memory = MemorySaver()
-        return builder.compile(checkpointer=memory)
+        # memory = MemorySaver()
+        return builder.compile()
 
 
 # Create a single, globally accessible instance of the compiled graph.

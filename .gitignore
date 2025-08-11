@@ -9,6 +9,7 @@ __pycache__/
 # ignore service account
 creds/
 .langgraph_api/
+fais_index/
 
 # Distribution / packaging
 .Python

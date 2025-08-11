@@ -12,6 +12,5 @@ LLM : ChatGoogleGenerativeAI = ChatGoogleGenerativeAI(
     temperature=settings.TEMPERATURE,
     safety_settings={
         HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
-    },
-    convert_system_message_to_human=True,
+    }
 )
