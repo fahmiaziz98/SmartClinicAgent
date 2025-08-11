@@ -1,25 +1,23 @@
-
-from typing import Any, Callable, List, Annotated
-from typing_extensions import TypedDict
-
 from langsmith import Client
+from typing_extensions import TypedDict
+from typing import Any, Callable, List, Annotated
 
-from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import StateGraph, START
-from langgraph.graph.message import AnyMessage, add_messages
 from langgraph.prebuilt import tools_condition
+from langgraph.checkpoint.memory import MemorySaver
+from langgraph.graph.message import AnyMessage, add_messages
 
-from src.agent.setting import settings
 from src.agent.base_agent import Agent
+from src.agent.llm import LLM
 from src.agent.prompt import patient_agent_prompt
-from agent.tools.tools_calendar import (
+from agent.tools import (
+    knowledge_base_tool,
     get_doctor_schedule_appointments,
     get_event_by_id,
     create_doctor_appointment,
     update_doctor_appointment,
     cancel_doctor_appointment,
 )
-from agent.tools.tool_retriever import knowledge_base_tool
 from src.agent.utils import create_tool_node_with_fallback
 
 
@@ -47,14 +45,9 @@ class AgentGraph:
     """
 
     def __init__(self):
-        self.llm = self._initialize_llm()
+        self.llm = LLM
         self.tools = self._get_tools()
         self.agent_runnable = self._create_agent_runnable()
-
-    @staticmethod
-    def _initialize_llm():
-        """Initializes the ChatGoogleGenerativeAI model with specific safety settings."""
-        return 
 
     @staticmethod
     def _get_tools() -> List[Callable[..., Any]]:
