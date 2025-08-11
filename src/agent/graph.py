@@ -3,12 +3,7 @@ from typing import Any, Callable, List, Annotated
 from typing_extensions import TypedDict
 
 from langsmith import Client
-from langchain_core.runnables import Runnable
-from langchain_google_genai import (
-    ChatGoogleGenerativeAI,
-    HarmBlockThreshold,
-    HarmCategory,
-)
+
 from langgraph.checkpoint.memory import MemorySaver
 from langgraph.graph import StateGraph, START
 from langgraph.graph.message import AnyMessage, add_messages
@@ -57,16 +52,9 @@ class AgentGraph:
         self.agent_runnable = self._create_agent_runnable()
 
     @staticmethod
-    def _initialize_llm() -> ChatGoogleGenerativeAI:
+    def _initialize_llm():
         """Initializes the ChatGoogleGenerativeAI model with specific safety settings."""
-        return ChatGoogleGenerativeAI(
-            model=settings.GEMINI_MODEL_PRO,
-            api_key=settings.GEMINI_API_KEY,
-            safety_settings={
-                HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT: HarmBlockThreshold.BLOCK_NONE,
-            },
-            convert_system_message_to_human=True,
-        )
+        return 
 
     @staticmethod
     def _get_tools() -> List[Callable[..., Any]]:
@@ -81,11 +69,11 @@ class AgentGraph:
             cancel_doctor_appointment,
         ]
 
-    def _create_agent_runnable(self) -> Runnable:
+    def _create_agent_runnable(self):
         """Binds the tools to the LLM via the agent prompt."""
         return patient_agent_prompt | self.llm.bind_tools(self.tools)
 
-    def compile_graph(self) -> Runnable:
+    def compile_graph(self):
         """
         Builds and compiles the StateGraph for the agent.
 
