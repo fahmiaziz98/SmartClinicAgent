@@ -1,6 +1,7 @@
-from typing import List
+from typing import List, Optional
 from pathlib import Path
 from functools import lru_cache
+from pydantic import model_validator
 from pydantic_settings import BaseSettings
 from dotenv import load_dotenv, find_dotenv
 
@@ -25,20 +26,30 @@ class Settings(BaseSettings):
     SMTP_PORT: int = 587
 
     # Google Calendar 
-    CALENDER_ID: str
+    CALENDAR_ID: str
     SERVICE_ACCOUNT_FILE: str
     SCOPES_CALENDER: List[str] = ["https://www.googleapis.com/auth/calendar"] 
-    GOOGLE_APPLICATION_CREDENTIALS: str = str(BASE_DIR / SERVICE_ACCOUNT_FILE)
+    GOOGLE_APPLICATION_CREDENTIALS: Optional[str] = None
     
     # StorageConfiguration 
     FAISS_INDEX: str = str(BASE_DIR / "fais_index")
     DOCS_PATH: str = str(BASE_DIR / "src" / "agent" / "docs")
+
+    LANGSMITH_TRACING_V2: str
+    LANGSMITH_PROJECT: str
+    LANGSMITH_API_KEY: str
     
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
         case_sensitive = True
+
+    @model_validator(mode='after')
+    def set_google_credentials(self) -> 'Settings':
+        if self.SERVICE_ACCOUNT_FILE:
+            self.GOOGLE_APPLICATION_CREDENTIALS = str(self.BASE_DIR / self.SERVICE_ACCOUNT_FILE)
+        return self
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)

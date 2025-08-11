@@ -8,6 +8,7 @@ __pycache__/
 
 # ignore service account
 creds/
+.langgraph_api/
 
 # Distribution / packaging
 .Python

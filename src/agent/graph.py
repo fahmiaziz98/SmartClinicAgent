@@ -10,8 +10,8 @@ from langgraph.graph.message import AnyMessage, add_messages
 from src.agent.base_agent import Agent
 from src.agent.llm import LLM
 from src.agent.prompt import patient_agent_prompt
-from agent.tools import (
-    knowledge_base_tool,
+from src.agent.tools import (
+    # knowledge_base_tool,
     get_doctor_schedule_appointments,
     get_event_by_id,
     create_doctor_appointment,
@@ -55,7 +55,7 @@ class AgentGraph:
         return [
             get_doctor_schedule_appointments,
             get_event_by_id,
-            knowledge_base_tool,
+            # knowledge_base_tool,
             # Sensitive tools that modify state
             create_doctor_appointment,
             update_doctor_appointment,

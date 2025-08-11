@@ -9,7 +9,7 @@ from langchain_core.tools import tool
 
 from .helper import create_event
 from src.agent.core import CALENDAR_SERVICE, EMAIL_SERVICE
-from agent.tools.schema import (
+from .schema import (
     InputGetDoctorSchedule,
     InputGetEventById,
     InputCreateAppointment,
