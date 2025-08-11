@@ -1,23 +1,23 @@
 import pytz
+from loguru import logger
 from datetime import datetime
 from typing import Any, Dict, Optional
 from datetime import timedelta
 
 from googleapiclient.errors import HttpError
 from langchain_core.tools import tool
-from loguru import logger
 
+from .helper import create_event
 from src.agent.core import CALENDAR_SERVICE, EMAIL_SERVICE
-from src.agent.schema import (
+from agent.tools.schema import (
     InputGetDoctorSchedule,
     InputGetEventById,
     InputCreateAppointment,
     InputUpdateAppointment,
     InputCancelAppointment,
-    InputKnowledgeBase
 )
 from src.agent.setting import settings
-from src.agent.utils import create_event, format_event, format_event_details
+from src.agent.utils import format_event, format_event_details
 
 
 @tool("get_doctor_schedule_appointments", args_schema=InputGetDoctorSchedule, return_direct=True)

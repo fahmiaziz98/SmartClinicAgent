@@ -9,8 +9,7 @@ from langchain_text_splitters import RecursiveCharacterTextSplitter
 
 from langchain_core.tools import tool
 from src.agent.setting import settings
-from src.agent.schema import InputKnowledgeBase
-
+from agent.tools.schema import InputKnowledgeBase
 
 
 class VectorStoreRetriever:

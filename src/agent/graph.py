@@ -12,14 +12,14 @@ from langgraph.prebuilt import tools_condition
 from src.agent.setting import settings
 from src.agent.base_agent import Agent
 from src.agent.prompt import patient_agent_prompt
-from src.agent.tools_calendar import (
+from agent.tools.tools_calendar import (
     get_doctor_schedule_appointments,
     get_event_by_id,
     create_doctor_appointment,
     update_doctor_appointment,
     cancel_doctor_appointment,
 )
-from src.agent.tool_retriever import knowledge_base_tool
+from agent.tools.tool_retriever import knowledge_base_tool
 from src.agent.utils import create_tool_node_with_fallback
 
 
