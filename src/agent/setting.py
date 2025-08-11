@@ -32,6 +32,8 @@ class Settings(BaseSettings):
     
     # StorageConfiguration 
     FAISS_INDEX: str = str(BASE_DIR / "fais_index")
+    DOCS_PATH: str = str(BASE_DIR / "src" / "agent" / "docs")
+    
 
     class Config:
         env_file = ".env"
