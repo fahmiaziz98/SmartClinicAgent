@@ -21,6 +21,8 @@ class Settings(BaseSettings):
     # Gmail service
     ACCOUNT_GMAIL: str
     PASSWORD_GMAIL: str
+    SMTP_SERVER: str = "smtp.gmail.com"
+    SMTP_PORT: int = 587
 
     # Google Calendar 
     CALENDER_ID: str
