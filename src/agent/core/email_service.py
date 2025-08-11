@@ -118,4 +118,4 @@ class EmailNotificationService:
         return self.primary_provider.send_email(template)
 
 
-email_service: EmailNotificationService = EmailNotificationService()
+EMAIL_SERVICE: EmailNotificationService = EmailNotificationService()

@@ -57,4 +57,4 @@ class GoogleCalendarService:
         self._service = None
 
 # create a global instance of the service
-SERVICE: GoogleCalendarService = GoogleCalendarService().get_service()
+CALENDAR_SERVICE: GoogleCalendarService = GoogleCalendarService().get_service()
