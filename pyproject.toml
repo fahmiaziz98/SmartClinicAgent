@@ -1,0 +1,16 @@
+[project]
+name = "smartclinicagent"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "faiss-cpu==1.11.0.post1",
+    "fastembed==0.7.1",
+    "google-ai-generativelanguage==0.6.15",
+    "langchain-community==0.3.27",
+    "langchain[google-genai]==0.3.27",
+    "langgraph==0.6.4",
+    "loguru==0.7.3",
+    "unstructured==0.18.11",
+]
