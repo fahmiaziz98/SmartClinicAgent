@@ -12,5 +12,7 @@ dependencies = [
     "langchain[google-genai]==0.3.27",
     "langgraph==0.6.4",
     "loguru==0.7.3",
+    "pydantic-settings==2.10.1",
+    "python-dotenv>=1.1.1",
     "unstructured==0.18.11",
 ]
