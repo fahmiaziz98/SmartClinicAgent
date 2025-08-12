@@ -10,7 +10,7 @@ from src.agent.base_agent import Agent
 from src.agent.llm import LLM
 from src.agent.prompt import patient_agent_prompt
 from src.agent.tools import (
-    # knowledge_base_tool,
+    knowledge_base_tool,
     get_doctor_schedule_appointments,
     get_event_by_id,
     create_doctor_appointment,
@@ -50,7 +50,8 @@ class AgentGraph:
         return [
             get_doctor_schedule_appointments,
             get_event_by_id,
-            # knowledge_base_tool,
+            knowledge_base_tool,
+
             # Sensitive tools that modify state
             create_doctor_appointment,
             update_doctor_appointment,
@@ -88,6 +89,7 @@ class AgentGraph:
 
         # The checkpointer allows the graph to persist its state,
         # creating a memory for the conversation.
+        # For production using postgredb
         # memory = MemorySaver()
         return builder.compile()
 

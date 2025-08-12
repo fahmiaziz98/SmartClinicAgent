@@ -72,17 +72,17 @@ class VectorStoreRetriever:
         logger.info(f"Loading retriever from {self.index_dir}")
         return vector_store.as_retriever(search_kwargs={"k": 5})
     
-# VECTORESTORE: VectorStoreRetriever = VectorStoreRetriever()
-# retriever = VECTORESTORE.load_retriever()
+VECTORESTORE: VectorStoreRetriever = VectorStoreRetriever()
+retriever = VECTORESTORE.load_retriever()
 
-# @tool("knowledge_base_tool", args_schema=InputKnowledgeBase)
-# def knowledge_base_tool(query: str):
-#     """
-#     Use this tool to answer questions related to the clinic’s knowledge base,
-#     such as operating hours, address, available services, diagnoses,
-#     and other clinic-related information.
-#     The tool retrieves relevant content from stored documents and returns the most relevant excerpts to the user.
-#     """
-#     logger.info(f"Searching query: {query}")
-#     docs = retriever.invoke(query)
-#     return "\n\n".join([doc.page_content for doc in docs])
+@tool("knowledge_base_tool", args_schema=InputKnowledgeBase)
+def knowledge_base_tool(query: str):
+    """
+    Use this tool to answer questions related to the clinic’s knowledge base,
+    such as operating hours, address, available services, diagnoses,
+    and other clinic-related information.
+    The tool retrieves relevant content from stored documents and returns the most relevant excerpts to the user.
+    """
+    logger.info(f"Searching query: {query}")
+    docs = retriever.invoke(query)
+    return "\n\n".join([doc.page_content for doc in docs])
