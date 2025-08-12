@@ -92,12 +92,6 @@ langgraph dev
   <img src="static/ecosystem-langchain.png" alt="Example UI 1" style="width: 100%; border: 1px solid #ddd; border-radius: 8px;" />
 </div>
 
-<div style="display: flex; gap: 10px; justify-content: space-between;">
-  <img src="static/mail-example.png" alt="Example UI 2" style="width: 30%; border: 1px solid #ddd; border-radius: 8px;" />
-  <img src="static/mail-example-2.png" alt="Example UI 2" style="width: 33%; border: 1px solid #ddd; border-radius: 8px;" />
-  <img src="static/mail-example-3.png" alt="Example UI 2" style="width: 33%; border: 1px solid #ddd; border-radius: 8px;" />
-</div>
-
 
 ---
 ## 🚀 Roadmap
