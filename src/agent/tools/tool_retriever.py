@@ -37,7 +37,7 @@ class VectorStoreRetriever:
     def _load_docs(self):
         """Load and split Markdown documents."""
         logger.info(f"Loading documents from {self.path_docs}")
-        loader = UnstructuredMarkdownLoader(str(self.path_docs))
+        loader = UnstructuredMarkdownLoader(str(self.path_docs)+ "/faq.md")
         docs = loader.load()
 
         splitter = RecursiveCharacterTextSplitter(

@@ -13,6 +13,7 @@ dependencies = [
     "langgraph==0.6.4",
     "langgraph-cli[inmem]>=0.3.6",
     "loguru==0.7.3",
+    "markdown>=3.8.2",
     "pydantic-settings==2.10.1",
     "python-dotenv>=1.1.1",
     "pytz>=2025.2",
