@@ -7,7 +7,7 @@ from src.agent.setting import settings
 
 
 LLM : ChatGoogleGenerativeAI = ChatGoogleGenerativeAI(
-    model=settings.GEMINI_MODEL_PRO,
+    model=settings.GEMINI_MODEL_FLASH,
     api_key=settings.GEMINI_API_KEY,
     temperature=settings.TEMPERATURE,
     safety_settings={
