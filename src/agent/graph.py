@@ -20,17 +20,6 @@ from src.agent.tools import (
 from src.agent.utils import create_tool_node_with_fallback
 
 
-class State(TypedDict):
-    """
-    Represents the state of our graph.
-
-    Attributes:
-        messages: The list of messages that the agent has seen.
-                  It is appended to by the `add_messages` function.
-    """
-    messages: Annotated[list[AnyMessage], add_messages]
-
-
 class AgentGraph:
     """
     Encapsulates the creation and compilation of the conversational agent graph.
