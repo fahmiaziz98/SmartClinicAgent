@@ -1,5 +1,7 @@
+"""Human-in-the-loop (HITL) wrapper for LangGraph tools."""
+
+from typing import Callable, Optional, Union
 from loguru import logger
-from typing import Callable
 from langchain_core.tools import BaseTool, tool as create_tool
 from langchain_core.runnables import RunnableConfig
 from langgraph.types import interrupt
@@ -7,19 +9,29 @@ from langgraph.prebuilt.interrupt import HumanInterruptConfig, HumanInterrupt, A
 
 
 def human_in_the_loop(
-    tool: Callable | BaseTool,
+    tool: Union[Callable, BaseTool],
     *,
-    interrupt_config: HumanInterruptConfig = None
-):
-    """Wrap a tool to support human-in-the-loop review."""
+    interrupt_config: Optional[HumanInterruptConfig] = None
+) -> BaseTool:
+    """
+    Wrap a tool with human-in-the-loop (HITL) functionality.
+
+    Args:
+        tool (Callable | BaseTool): The tool to wrap.
+        interrupt_config (HumanInterruptConfig, optional):
+            Configuration for human interrupt. Defaults to a safe config.
+
+    Returns:
+        BaseTool: A wrapped tool with HITL review support.
+    """
     if not isinstance(tool, BaseTool):
         tool = create_tool(tool)
 
     if interrupt_config is None:
         interrupt_config = HumanInterruptConfig(
-            allow_ignore=False,    # Allow skipping this step
+            allow_ignore=False,   # Disallow skipping this step
             allow_respond=True,   # Allow text feedback
-            allow_edit=True,     # Don't allow editing
+            allow_edit=True,      # Allow editing
             allow_accept=True     # Allow direct acceptance
         )
 
@@ -29,33 +41,33 @@ def human_in_the_loop(
         args_schema=tool.args_schema,
     )
     def call_tool_with_interrupt(config: RunnableConfig, **tool_input):
-        
         logger.info(f"Using interrupt tool {tool.name}")
         request = HumanInterrupt(
             action_request=ActionRequest(
-                action=tool.name,  # The action being requested
-                args=tool_input  # Arguments for the action
+                action=tool.name,   # The action being requested
+                args=tool_input     # Arguments for the action
             ),
             config=interrupt_config,
             description="Please review the command before execution"
         )
 
         response = interrupt([request])[0]
-        # approve the tool call
+
         if response["type"] == "accept":
             tool_response = tool.invoke(tool_input, config)
-            logger.success(f"Success accept tool: {tool.name}")
-        # update tool call args
+            logger.success(f"Accepted tool: {tool.name}")
+
         elif response["type"] == "edit":
             tool_input = response["args"]["args"]
             tool_response = tool.invoke(tool_input, config)
-            logger.success(f"Success edit tool: {tool.name}")
-        # respond to the LLM with user feedback
+            logger.success(f"Edited tool args for: {tool.name}")
+
         elif response["type"] == "response":
-            user_feedback = response["args"]
-            tool_response = user_feedback
-            logger.success(f"Success feedback tool: {tool.name}")
+            tool_response = response["args"]
+            logger.success(f"User feedback captured for: {tool.name}")
+
         else:
+            logger.error(f"Unsupported interrupt response type: {response['type']}")
             raise ValueError(f"Unsupported interrupt response type: {response['type']}")
 
         return tool_response
