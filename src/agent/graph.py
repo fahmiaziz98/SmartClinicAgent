@@ -12,10 +12,10 @@ from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 from langgraph.runtime import Runtime
 
-from agent.context import Context
-from agent.state import State, InputState
-from agent.tools import TOOLS_CALENDAR, TOOLS_KNOWLEDGE_BASE
-from agent.utils import create_tool_node_with_fallback, load_chat_model
+from src.agent.context import Context
+from src.agent.state import State, InputState
+from src.agent.tools import TOOLS_CALENDAR, TOOLS_KNOWLEDGE_BASE
+from src.agent.utils import create_tool_node_with_fallback, load_chat_model
 
 
 
