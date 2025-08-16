@@ -1,8 +1,16 @@
+"""Context configuration for the agent.
+
+This module defines the `Context` class which provides system prompts 
+and model configuration for the agent. It is built on top of Pydantic's BaseModel 
+to validate and manage agent context settings.
+"""
+
 from __future__ import annotations
 
 import os
 from pydantic import BaseModel, Field, ConfigDict
 from . import prompt
+
 
 class Context(BaseModel):
     """The context for the agent."""
