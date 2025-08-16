@@ -1,17 +1,7 @@
-from .tool_retriever import knowledge_base_tool
-from .tools_calendar import (
-    get_doctor_schedule_appointments,
-    get_event_by_id,
-    create_doctor_appointment,
-    update_doctor_appointment,
-    cancel_doctor_appointment,
-)
+from .tool_retriever import TOOLS_KNOWLEDGE_BASE
+from .tools_calendar import TOOLS_CALENDAR
 
 __all__ = [
-    "knowledge_base_tool",
-    "get_doctor_schedule_appointments",
-    "get_event_by_id",
-    "create_doctor_appointment",
-    "update_doctor_appointment",
-    "cancel_doctor_appointment",
+    "TOOLS_KNOWLEDGE_BASE",
+    "TOOLS_CALENDAR"
 ]

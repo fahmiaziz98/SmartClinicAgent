@@ -1,89 +1,54 @@
-from typing_extensions import TypedDict
-from typing import Any, Callable, List, Annotated
+"""Define a custom Reasoning and Action agent.
 
-from langgraph.graph import StateGraph, START
-from langgraph.prebuilt import tools_condition
-from langgraph.checkpoint.memory import MemorySaver
-from langgraph.graph.message import AnyMessage, add_messages
+Works with a chat model with tool calling support.
+"""
 
-from src.agent.base_agent import Agent
-from src.agent.llm import LLM
-from src.agent.prompt import patient_agent_prompt
-from src.agent.tools import (
+from datetime import UTC, datetime
+from typing import Any, Callable, Dict, List, Literal, cast
+
+from langchain_core.messages import AIMessage
+from langgraph.graph import StateGraph
+from langgraph.prebuilt import ToolNode
+from langgraph.runtime import Runtime
+
+from agent.context import Context
+from agent.hitl import human_in_the_loop
+from agent.state import State, InputState
+from agent.tools import (
     knowledge_base_tool,
     get_doctor_schedule_appointments,
     get_event_by_id,
     create_doctor_appointment,
     update_doctor_appointment,
-    cancel_doctor_appointment,
+    cancel_doctor_appointment
 )
-from src.agent.utils import create_tool_node_with_fallback
+from agent.utils import create_tool_node_with_fallback, load_chat_model
 
 
-class AgentGraph:
+
+
+async def call_model(
+    state: State,
+    runtime: Runtime[Context]
+) -> Dict[str, List[AIMessage]]:
+    pass
+
+def route_model_output(state: State) -> Literal["__end__", "tools"]:
+    """Determine the next node based on the model's output.
+
+    This function checks if the model's last message contains tool calls.
+
+    Args:
+        state (State): The current state of the conversation.
+
+    Returns:
+        str: The name of the next node to call ("__end__" or "tools").
     """
-    Encapsulates the creation and compilation of the conversational agent graph.
-
-    This class handles the setup of the language model, tools, and the graph
-    structure, providing a compiled, runnable graph instance.
-    """
-
-    def __init__(self):
-        self.llm = LLM
-        self.tools = self._get_tools()
-        self.agent_runnable = self._create_agent_runnable()
-
-    @staticmethod
-    def _get_tools() -> List[Callable[..., Any]]:
-        """Returns a list of all tools available to the agent."""
-        return [
-            get_doctor_schedule_appointments,
-            get_event_by_id,
-            knowledge_base_tool,
-
-            # Sensitive tools that modify state
-            create_doctor_appointment,
-            update_doctor_appointment,
-            cancel_doctor_appointment,
-        ]
-
-    def _create_agent_runnable(self):
-        """Binds the tools to the LLM via the agent prompt."""
-        return patient_agent_prompt | self.llm.bind_tools(self.tools)
-
-    def compile_graph(self):
-        """
-        Builds and compiles the StateGraph for the agent.
-
-        The graph defines the flow of control:
-        1. Start with the 'agent' node.
-        2. The 'agent' decides whether to call a tool.
-        3. If a tool is called, the 'tools' node is executed.
-        4. The output of the 'tools' node is fed back to the 'agent'.
-        5. The process repeats until the agent generates a final response.
-
-        Returns:
-            A compiled, runnable graph with a memory checkpointer.
-        """
-        builder = StateGraph(State)
-
-        # Define nodes
-        builder.add_node("agent", Agent(self.agent_runnable))
-        builder.add_node("tools", create_tool_node_with_fallback(self.tools))
-
-        # Define edges
-        builder.add_edge(START, "agent")
-        builder.add_conditional_edges("agent", tools_condition)
-        builder.add_edge("tools", "agent")
-
-        # The checkpointer allows the graph to persist its state,
-        # creating a memory for the conversation.
-        # For production using postgredb
-        # memory = MemorySaver()
-        return builder.compile()
-
-
-# Create a single, globally accessible instance of the compiled graph.
-# This follows the singleton pattern at the module level, which is efficient
-# as the graph is compiled only once when the module is first imported.
-graph = AgentGraph().compile_graph()
+    last_messages = state.messages[-1]
+    if not isinstance(last_messages, AIMessage):
+        raise ValueError(
+            f"Expected AIMessage in output edges, but got {type(last_messages).__name__}"
+        )
+    if not last_messages.tool_calls:
+        return "__end__"
+    return "tools"

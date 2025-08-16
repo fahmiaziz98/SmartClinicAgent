@@ -1,4 +1,5 @@
 import faiss
+from typing import Any, Callable, List
 from pathlib import Path
 from loguru import logger
 from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
@@ -86,3 +87,9 @@ def knowledge_base_tool(query: str):
     logger.info(f"Searching query: {query}")
     docs = retriever.invoke(query)
     return "\n\n".join([doc.page_content for doc in docs])
+
+
+
+TOOLS_KNOWLEDGE_BASE: List[Callable[..., Any]] = [
+    knowledge_base_tool,
+]

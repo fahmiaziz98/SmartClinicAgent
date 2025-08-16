@@ -1,13 +1,14 @@
 import pytz
 from loguru import logger
 from datetime import datetime
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List, Callable
 from datetime import timedelta
 
 from googleapiclient.errors import HttpError
 from langchain_core.tools import tool
 
 from .helper import create_event
+from agent.hitl import human_in_the_loop
 from src.agent.core import CALENDAR_SERVICE, EMAIL_SERVICE
 from .schema import (
     InputGetDoctorSchedule,
@@ -351,3 +352,19 @@ def cancel_doctor_appointment(
             'success': False,
             'message': f'Error delete appointment: {error}'
         }
+    
+
+# Register sensitif tool
+HITL_CREATE_APPOINTMENT = human_in_the_loop(create_doctor_appointment)
+HITL_UPDATE_APPOINTMENT = human_in_the_loop(update_doctor_appointment)
+HITL_CANCEL_APPOINTMENT = human_in_the_loop(cancel_doctor_appointment)
+
+TOOLS_CALENDAR: List[Callable[..., Any]] = [
+    get_doctor_schedule_appointments,
+    get_event_by_id,
+
+    # sensitif tools
+    HITL_CREATE_APPOINTMENT,
+    HITL_UPDATE_APPOINTMENT,
+    HITL_CANCEL_APPOINTMENT
+]
