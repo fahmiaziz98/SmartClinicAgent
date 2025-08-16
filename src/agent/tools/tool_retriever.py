@@ -32,13 +32,24 @@ class VectorStoreRetriever:
         self.chunk_size = chunk_size
         self.chunk_overlap = chunk_overlap
 
-        self.documents = self._load_docs()
-        self.vector_store = self._build_vector_store()
+        if self._index_exists():
+            logger.info(f"FAISS index found in {self.index_dir}, loading instead of rebuilding.")
+            self.vector_store = self._load_vector_store()
+        else:
+            logger.info("No FAISS index found, building a new one.")
+            self.documents = self._load_docs()
+            self.vector_store = self._build_vector_store()
+
+    def _index_exists(self) -> bool:
+        """Check if FAISS index and pkl files exist."""
+        faiss_file = self.index_dir / "index.faiss"
+        pkl_file = self.index_dir / "index.pkl"
+        return faiss_file.exists() and pkl_file.exists()
 
     def _load_docs(self):
         """Load and split Markdown documents."""
         logger.info(f"Loading documents from {self.path_docs}")
-        loader = UnstructuredMarkdownLoader(str(self.path_docs)+ "/faq.md")
+        loader = UnstructuredMarkdownLoader(str(self.path_docs / "faq.md"))
         docs = loader.load()
 
         splitter = RecursiveCharacterTextSplitter(
@@ -60,19 +71,26 @@ class VectorStoreRetriever:
         )
         logger.info(f"Building vector store from {len(self.documents)} documents")
         vector_store.add_documents(self.documents)
+
+        # pastikan folder ada
+        self.index_dir.mkdir(parents=True, exist_ok=True)
         vector_store.save_local(str(self.index_dir))
         return vector_store
 
-    def load_retriever(self):
-        """Load the FAISS index and return a retriever."""
-        vector_store = FAISS.load_local(
+    def _load_vector_store(self):
+        """Load existing FAISS index."""
+        return FAISS.load_local(
             str(self.index_dir),
             self.embeddings,
             allow_dangerous_deserialization=True
         )
+
+    def load_retriever(self):
+        """Return retriever wrapper around vector store."""
         logger.info(f"Loading retriever from {self.index_dir}")
-        return vector_store.as_retriever(search_kwargs={"k": 5})
-    
+        return self.vector_store.as_retriever(search_kwargs={"k": 5})
+
+
 VECTORESTORE: VectorStoreRetriever = VectorStoreRetriever()
 retriever = VECTORESTORE.load_retriever()
 
