@@ -1,81 +1,64 @@
 """Utility & helper functions."""
 
-import pytz
 from datetime import datetime
 from typing import Any, Dict, List
 
+import pytz
 from langchain.chat_models import init_chat_model
 from langchain_core.language_models import BaseChatModel
-from langchain_core.messages import BaseMessage
-from langchain_core.messages import ToolMessage
+from langchain_core.messages import BaseMessage, ToolMessage
 from langchain_core.runnables import RunnableLambda
 from langgraph.prebuilt import ToolNode
 
 
 def format_event_details(event: Dict) -> Dict:
-    """
-    Formats raw event data from Google Calendar API into a structured dictionary.
-
-    Args:
-        event: The raw event dictionary from the Google Calendar API.
-
-    Returns:
-        A dictionary with formatted, easy-to-access event details.
-    """
-    start = event.get('start', {})
-    end = event.get('end', {})
+    """Format raw Google Calendar event data into structured details."""
+    start = event.get("start", {})
+    end = event.get("end", {})
 
     start_time = None
     end_time = None
     all_day = False
 
-    if 'dateTime' in start:
-        start_time = datetime.fromisoformat(start['dateTime'].replace('Z', '+00:00'))
-        end_time = datetime.fromisoformat(end['dateTime'].replace('Z', '+00:00'))
-    elif 'date' in start:
-        start_time = datetime.fromisoformat(start['date'])
-        end_time = datetime.fromisoformat(end['date'])
+    if "dateTime" in start:
+        start_time = datetime.fromisoformat(start["dateTime"].replace("Z", "+00:00"))
+        end_time = datetime.fromisoformat(end["dateTime"].replace("Z", "+00:00"))
+    elif "date" in start:
+        start_time = datetime.fromisoformat(start["date"])
+        end_time = datetime.fromisoformat(end["date"])
         all_day = True
 
-
     return {
-        'id': event.get('id'),
-        'title': event.get('summary', 'No Title'),
-        'description': event.get('description', ''),
-        'location': event.get('location', ''),
-        'start_time': start_time,
-        'end_time': end_time,
-        'all_day': all_day,
-        'creator': event.get('creator', {}).get('email', ''),
-        'status': event.get('status', '')
+        "id": event.get("id"),
+        "title": event.get("summary", "No Title"),
+        "description": event.get("description", ""),
+        "location": event.get("location", ""),
+        "start_time": start_time,
+        "end_time": end_time,
+        "all_day": all_day,
+        "creator": event.get("creator", {}).get("email", ""),
+        "status": event.get("status", ""),
     }
 
+
 def format_event(event: Dict) -> Dict:
-    """
-    Formats event details for a user-friendly display, localized to a specific timezone.
+    """Format event details for user-friendly display (Asia/Jakarta timezone)."""
+    tz = pytz.timezone("Asia/Jakarta")
 
-    This function simplifies the event data to show only essential information for a patient,
-    such as date, time, and duration, converted to the 'Asia/Jakarta' timezone.
-
-    Args:
-        event: The raw event dictionary from the Google Calendar API.
-
-    Returns:
-        A simplified dictionary containing the event's date, start time, end time,
-        duration in minutes, and an all-day flag.
-    """
-    tz = pytz.timezone('Asia/Jakarta')
-
-    start = event.get('start', {})
-    end = event.get('end', {})
+    start = event.get("start", {})
+    end = event.get("end", {})
     all_day = False
 
-    if 'dateTime' in start:
-        start_time = datetime.fromisoformat(start['dateTime'].replace('Z', '+00:00')).astimezone(tz)
-        end_time = datetime.fromisoformat(end['dateTime'].replace('Z', '+00:00')).astimezone(tz)
-    elif 'date' in start:
-        start_time = datetime.fromisoformat(start['date'])
-        end_time = datetime.fromisoformat(end['date'])
+    if "dateTime" in start:
+        start_time = datetime.fromisoformat(
+            start["dateTime"].replace("Z", "+00:00")
+        ).astimezone(tz)
+        end_time = datetime.fromisoformat(
+            end["dateTime"].replace("Z", "+00:00")
+        ).astimezone(tz)
+    elif "date" in start:
+        start_time = datetime.fromisoformat(start["date"])
+        end_time = datetime.fromisoformat(end["date"])
         all_day = True
     else:
         start_time = None
@@ -86,27 +69,16 @@ def format_event(event: Dict) -> Dict:
         duration_minutes = int((end_time - start_time).total_seconds() / 60)
 
     return {
-        'date': start_time.strftime('%d %B %Y') if start_time else '',
-        'start_time': start_time.strftime('%H:%M') if start_time else '',
-        'end_time': end_time.strftime('%H:%M') if end_time else '',
-        'duration_minutes': duration_minutes,
-        'all_day': all_day
+        "date": start_time.strftime("%d %B %Y") if start_time else "",
+        "start_time": start_time.strftime("%H:%M") if start_time else "",
+        "end_time": end_time.strftime("%H:%M") if end_time else "",
+        "duration_minutes": duration_minutes,
+        "all_day": all_day,
     }
 
+
 def handle_tool_error(state: dict) -> dict:
-    """
-    A fallback function to handle errors that occur within a ToolNode.
-
-    It captures the error and formats it into a ToolMessage, allowing the
-    agent to understand that the tool call failed and why.
-
-    Args:
-        state: The current state of the graph, which includes the error information.
-
-    Returns:
-        A dictionary with a "messages" key containing a list of ToolMessages
-        reporting the error.
-    """
+    """Fallback handler for errors in ToolNode."""
     error = state.get("error")
     tool_calls = state["messages"][-1].tool_calls
     return {
@@ -119,40 +91,27 @@ def handle_tool_error(state: dict) -> dict:
         ]
     }
 
+
 def create_tool_node_with_fallback(tools: List[Any]) -> ToolNode:
-    """
-    Creates a ToolNode for a LangGraph agent with a built-in error fallback mechanism.
-
-    If any tool in the node raises an exception, the `handle_tool_error` function
-    will be invoked to process the error gracefully.
-
-    Args:
-        tools: A list of tools to be included in the ToolNode.
-
-    Returns:
-        A ToolNode instance configured with an error fallback.
-    """
+    """Create a ToolNode with built-in error fallback."""
     return ToolNode(tools).with_fallbacks(
         [RunnableLambda(handle_tool_error)], exception_key="error"
     )
 
+
 def get_message_text(msg: BaseMessage) -> str:
-    """Get the text content of a message."""
+    """Extract plain text from a message."""
     content = msg.content
     if isinstance(content, str):
         return content
-    elif isinstance(content, dict):
+    if isinstance(content, dict):
         return content.get("text", "")
-    else:
-        txts = [c if isinstance(c, str) else (c.get("text") or "") for c in content]
-        return "".join(txts).strip()
+    txts = [c if isinstance(c, str) else (c.get("text") or "") for c in content]
+    return "".join(txts).strip()
 
 
 def load_chat_model(fully_specified_name: str) -> BaseChatModel:
-    """Load a chat model from a fully specified name.
-
-    Args:
-        fully_specified_name (str): String in the format 'provider/model'.
-    """
+    """Load a chat model from a fully specified name (provider/model)."""
     provider, model = fully_specified_name.split("/", maxsplit=1)
     return init_chat_model(model, model_provider=provider)
+
