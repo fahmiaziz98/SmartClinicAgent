@@ -21,6 +21,7 @@ class Settings(BaseSettings):
         GEMINI_API_KEY (str): API key for the Gemini service.
     """
     BASE_DIR : Path = Path(__file__).resolve().parent.parent.parent 
+    GOOGLE_API_KEY: str
 
     # Gmail service
     ACCOUNT_GMAIL: str
