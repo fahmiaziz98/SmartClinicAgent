@@ -15,7 +15,7 @@ from langgraph.runtime import Runtime
 from src.agent.context import Context
 from src.agent.state import State, InputState
 from src.agent.tools import TOOLS_CALENDAR, TOOLS_KNOWLEDGE_BASE
-from src.agent.utils import create_tool_node_with_fallback, load_chat_model
+from src.agent.utils import load_chat_model
 
 
 
@@ -34,13 +34,11 @@ async def call_model(
     Returns:
         dict: A dictionary containing the model's response message.
     """
-    # get timezone
     logger.info("Call agent...")
     tz = pytz.timezone("Asia/Jakarta")
 
     model = load_chat_model(runtime.context.model).bind_tools(TOOLS_KNOWLEDGE_BASE + TOOLS_CALENDAR)
 
-    # Format the system prompt. Customize this to change the agent's behavior.
     system_message = runtime.context.system_prompt.format(
         time=datetime.now(tz=tz).isoformat()
     )
@@ -64,7 +62,6 @@ async def call_model(
             ]
         }
 
-    # Return the model's response as a list to be added to existing messages
     return {"messages": [response]}
 
 
@@ -93,26 +90,14 @@ def route_model_output(state: State) -> Literal["__end__", "tools"]:
     return "tools"
 
 
-# Define graph
 builder = StateGraph(State, input_schema=InputState, context_schema=Context)
 builder.add_node("call_model", call_model)
 builder.add_node("tools", ToolNode(TOOLS_KNOWLEDGE_BASE + TOOLS_CALENDAR))
 
-# Set the entrypoint as `call_model`
-# This means that this node is the first one called
 builder.add_edge("__start__", "call_model")
-
-# Add a conditional edge to determine the next step after `call_model`
 builder.add_conditional_edges(
     "call_model",
-    # After call_model finishes running, the next node(s) are scheduled
-    # based on the output from route_model_output
     route_model_output,
 )
-
-# Add a normal edge from `tools` to `call_model`
-# This creates a cycle: after using tools, we always return to the model
 builder.add_edge("tools", "call_model")
-
-# Compile the builder into an executable graph
 graph = builder.compile(name="ReAct Agent")

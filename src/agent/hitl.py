@@ -60,6 +60,4 @@ def human_in_the_loop(
 
         return tool_response
 
-
-
     return call_tool_with_interrupt
