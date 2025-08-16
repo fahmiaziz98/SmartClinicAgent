@@ -58,7 +58,7 @@ This will create a **.env** file with the same content as **.env.example**. You 
 
 ```env
 # api key
-GEMINI_API_KEY=""
+GOOGLE_API_KEY=""
 
 # gmail service
 ACCOUNT_GMAIL=""
@@ -76,7 +76,7 @@ LANGSMITH_API_KEY="langsmith-api-key"
 
 ### 3. Launch LangGraph Server 🚀
 ```bash
-langgraph dev
+langgraph dev --allow-blocking
 
 # Sample Output
 >    Ready!
@@ -87,6 +87,13 @@ langgraph dev
 >
 >    - LangGraph Studio Web UI: https://smith.langchain.com/studio/?baseUrl=http://127.0.0.1:2024
 ```
+**Note:**  
+You can try the app at [https://agentchat.vercel.app/](https://agentchat.vercel.app/)  
+
+1. Copy and paste your deployment URL (e.g., `http://localhost:2024`)  
+2. Add your Agent **ID**  
+3. (Optional) Provide your **LangSmith API Key**  
+
 #### 🖼️ Example UI Screenshot
 <div style="margin-bottom: 20px;">
   <img src="static/ecosystem-langchain.png" alt="Example UI 1" style="width: 100%; border: 1px solid #ddd; border-radius: 8px;" />
@@ -100,14 +107,14 @@ langgraph dev
 - [x] Add `memory presistance`
 - [x] Sending `email with SMTP` (create-update-deleted)
 - [x] Add `rag tools`
-- [ ] Add `human-interupt (approve/reject)`
+- [x] Add `human-interupt (approve/reject)`
 - [ ] Add `voice-based using elevenlabs/vapi`
 - [ ] Deploy on Docker
 - [ ] Deploy on Cloud
-- [ ] Implement Chat-UI
+- [x] Implement Chat-UI
 ### Future
 - [ ] Implement New Agent Pattern
-- [ ] Change memory presistance with `mem0/memU`
+- [ ] Add Long-Term Memory with `mem0/memU`
 
 ---
 ## 🤝 Contributing
