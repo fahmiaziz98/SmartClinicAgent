@@ -8,7 +8,7 @@ from googleapiclient.errors import HttpError
 from langchain_core.tools import tool
 
 from .helper import create_event
-from agent.hitl import human_in_the_loop
+from src.agent.hitl import human_in_the_loop
 from src.agent.core import CALENDAR_SERVICE, EMAIL_SERVICE
 from .schema import (
     InputGetDoctorSchedule,

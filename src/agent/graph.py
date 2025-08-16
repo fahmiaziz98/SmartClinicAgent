@@ -29,7 +29,7 @@ async def call_model(
 
     Args:
         state (State): The current state of the conversation.
-        config (RunnableConfig): Configuration for the model run.
+        runtime (Runtime[Context]): The runtime configuration for the agent.
 
     Returns:
         dict: A dictionary containing the model's response message.

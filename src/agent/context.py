@@ -6,7 +6,7 @@ import os
 from dataclasses import dataclass, field, fields
 from typing import Annotated
 
-from . import prompt, setting
+from . import prompt
 
 
 @dataclass(kw_only=True)
