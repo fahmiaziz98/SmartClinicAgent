@@ -33,7 +33,9 @@ class VectorStoreRetriever:
         self.chunk_overlap = chunk_overlap
 
         if self._index_exists():
-            logger.info(f"FAISS index found in {self.index_dir}, loading instead of rebuilding.")
+            logger.info(
+                f"FAISS index found in {self.index_dir}, loading instead of rebuilding."
+            )
             self.vector_store = self._load_vector_store()
         else:
             logger.info("No FAISS index found, building a new one.")
@@ -53,8 +55,7 @@ class VectorStoreRetriever:
         docs = loader.load()
 
         splitter = RecursiveCharacterTextSplitter(
-            chunk_size=self.chunk_size,
-            chunk_overlap=self.chunk_overlap
+            chunk_size=self.chunk_size, chunk_overlap=self.chunk_overlap
         )
         return splitter.split_documents(docs)
 
@@ -67,7 +68,7 @@ class VectorStoreRetriever:
             embedding_function=self.embeddings,
             index=index,
             docstore=InMemoryDocstore(),
-            index_to_docstore_id={}
+            index_to_docstore_id={},
         )
         logger.info(f"Building vector store from {len(self.documents)} documents")
         vector_store.add_documents(self.documents)
@@ -80,9 +81,7 @@ class VectorStoreRetriever:
     def _load_vector_store(self):
         """Load existing FAISS index."""
         return FAISS.load_local(
-            str(self.index_dir),
-            self.embeddings,
-            allow_dangerous_deserialization=True
+            str(self.index_dir), self.embeddings, allow_dangerous_deserialization=True
         )
 
     def load_retriever(self):
@@ -93,6 +92,7 @@ class VectorStoreRetriever:
 
 VECTORESTORE: VectorStoreRetriever = VectorStoreRetriever()
 retriever = VECTORESTORE.load_retriever()
+
 
 @tool("knowledge_base_tool", args_schema=InputKnowledgeBase)
 def knowledge_base_tool(query: str):
@@ -105,7 +105,6 @@ def knowledge_base_tool(query: str):
     logger.info(f"Searching query: {query}")
     docs = retriever.invoke(query)
     return "\n\n".join([doc.page_content for doc in docs])
-
 
 
 TOOLS_KNOWLEDGE_BASE: List[Callable[..., Any]] = [

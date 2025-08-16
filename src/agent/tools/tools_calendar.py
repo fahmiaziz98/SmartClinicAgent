@@ -21,7 +21,11 @@ from src.agent.setting import settings
 from src.agent.utils import format_event, format_event_details
 
 
-@tool("get_doctor_schedule_appointments", args_schema=InputGetDoctorSchedule, return_direct=True)
+@tool(
+    "get_doctor_schedule_appointments", 
+    args_schema=InputGetDoctorSchedule, 
+    return_direct=True
+)
 def get_doctor_schedule_appointments(
     start_datetime: datetime,
     end_datetime: datetime,
@@ -31,7 +35,10 @@ def get_doctor_schedule_appointments(
     Use this tool exclusively to retrieve the doctor’s appointment schedule,
     such as available dates and times.
     This tool is not intended for looking up patient records or personal details.
-    Its primary purpose is to provide schedule information that can help patients choose a suitable time when creating a new appointment
+    Its primary purpose is to provide schedule information
+    that can help patients choose a suitable time
+    when creating a new appointment
+
     Args:
         start_datetime: The start time for searching events.
         end_datetime: The end time for searching events.
