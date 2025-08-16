@@ -7,7 +7,7 @@ from datetime import timedelta
 from googleapiclient.errors import HttpError
 from langchain_core.tools import tool
 
-from .helper import create_event
+from .helper import create_event, is_within_doctor_schedule
 from src.agent.hitl import human_in_the_loop
 from src.agent.core import CALENDAR_SERVICE, EMAIL_SERVICE
 from .schema import (
@@ -150,6 +150,21 @@ def create_doctor_appointment(
         - message: Status message
     """
     try:
+        is_within_doctor_schedule(appointment_datetime, duration_minutes)
+    except Exception as e:
+        return {
+            'success': False,
+            'event_id': None,
+            'error': str(e),
+            'message': (
+                    "Dr. Fahmi practices with the following schedule:"
+                    "- **Monday, Wednesday, Friday**: 16:00 - 20:00 WIB"
+                    "- **Saturday**: 08:00 - 12:00 WIB"
+                    "- Tuesday, Thursday**: Private practice holiday (in hospital)"
+                    "- **Sunday**: Holiday"
+                )
+            }
+    try:
         logger.info("Using tools create_doctor_appointment...")
 
         end_datetime = appointment_datetime + timedelta(minutes=duration_minutes)
@@ -236,8 +251,30 @@ def update_doctor_appointment(
         - Event: Event details after update
         - message: Status message
     """
+    if start_datetime is not None:
+        duration_minutes = 30  
+        
+        if end_datetime is not None:
+            duration_minutes = int((end_datetime - start_datetime).total_seconds() / 60)
+        
+        try:
+            is_within_doctor_schedule(start_datetime, duration_minutes)
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e),
+                "error_type": "schedule_validation",
+                "message": (
+                    "Dr. Fahmi practices with the following schedule:"
+                    "- **Monday, Wednesday, Friday**: 16:00 - 20:00 WIB"
+                    "- **Saturday**: 08:00 - 12:00 WIB"
+                    "- Tuesday, Thursday**: Private practice holiday (in hospital)"
+                    "- **Sunday**: Holiday"
+                )
+            }
     try:
         logger.info("Using tools update_doctor_appointment...")
+        
         timezone = "Asia/Jakarta"
         tz = pytz.timezone(timezone)
 
