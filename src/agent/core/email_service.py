@@ -65,41 +65,22 @@ class EmailNotificationService:
 
     def send_appointment_created(self, data: SendAppointment) -> Dict[str, Any]:
         """Send appointment confirmation email"""
-        template = EmailTemplates.appointment_created(
-            data.patient_name,
-            data.event_id,
-            data.appointment_datetime,
-            data.appointment_type,
-            data.duration,
-            data.location,
-        )
+        template = EmailTemplates.appointment_created(data=data)
 
         template.recipients = [data.patient_email]
-
-        result = self.primary_provider.send_email(template)
-        return result
+        return self.primary_provider.send_email(template)
 
     def send_appointment_updated(self, data: UpdateAppointment) -> Dict[str, Any]:
         """Send appointment update email"""
-        template = EmailTemplates.appointment_updated(
-            data.patient_name,
-            data.title,
-            data.new_datetime,
-            data.description,
-            data.location,
-        )
+        template = EmailTemplates.appointment_updated(data=data)
+
         template.recipients = [data.patient_email]
         return self.primary_provider.send_email(template)
 
     def send_appointment_cancelled(self, data: CancelAppointment) -> Dict[str, Any]:
         """Send appointment cancellation email"""
-        template = EmailTemplates.appointment_cancelled(
-            data.patient_name,
-            data.event_id,
-            data.appointment_datetime,
-            data.appointment_type,
-            data.reason,
-        )
+        template = EmailTemplates.appointment_cancelled(data=data)
+
         template.recipients = [data.patient_email]
         return self.primary_provider.send_email(template)
 

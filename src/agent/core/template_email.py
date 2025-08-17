@@ -2,6 +2,9 @@ from dataclasses import dataclass
 from datetime import datetime
 from typing import List
 
+from src.agent.model.models_email import (CancelAppointment, SendAppointment, 
+                                          UpdateAppointment)
+
 
 @dataclass
 class EmailContent:
@@ -18,14 +21,7 @@ class EmailTemplates:
     """Professional email templates for appointments"""
 
     @staticmethod
-    def appointment_created(
-        patient_name: str,
-        event_id: str,
-        appointment_datetime: datetime,
-        appointment_type: str,
-        duration: int,
-        location: str,
-    ) -> EmailContent:
+    def appointment_created(data: SendAppointment) -> EmailContent:
         subject = f"✅ Appointment Confirmed - Klinik Sehat Bersama"
 
         html_body = f"""
@@ -67,20 +63,20 @@ class EmailTemplates:
                 </div>
 
                 <div class="content">
-                    <h3>Dear {patient_name},</h3>
+                    <h3>Dear {data.patient_name},</h3>
                     <p>Your appointment has been successfully scheduled!</p>
 
                     <h4>📌 Your Event ID:</h4>
-                    <div class="event-id">{event_id}</div>
+                    <div class="event-id">{data.event_id}</div>
                     <div class="note">Remember this Event ID, it will be required for confirmation or schedule changes.</div>
 
                     <div class="appointment-details">
                         <h4>📅 Appointment Details:</h4>
                         <ul>
-                            <li><strong>Date & Time:</strong> {appointment_datetime}</li>
-                            <li><strong>Type:</strong> {appointment_type}</li>
-                            <li><strong>Duration:</strong> {duration} minutes</li>
-                            <li><strong>Location:</strong> {location}</li>
+                            <li><strong>Date & Time:</strong> {data.appointment_datetime}</li>
+                            <li><strong>Type:</strong> {data.appointment_type}</li>
+                            <li><strong>Duration:</strong> {data.duration} minutes</li>
+                            <li><strong>Location:</strong> {data.location}</li>
                             <li><strong>Doctor:</strong> Dr. Fahmi</li>
                         </ul>
                     </div>
@@ -109,18 +105,18 @@ class EmailTemplates:
         text_body = f"""
         Klinik Sehat Bersama - Appointment Confirmation
 
-        Dear {patient_name},
+        Dear {data.patient_name},
 
         Your appointment has been successfully scheduled!
 
-        📌 EVENT ID: {event_id}
+        📌 EVENT ID: {data.event_id}
         (Remember this Event ID, it will be required for confirmation or schedule changes.)
 
         APPOINTMENT DETAILS:
-        • Date & Time: {appointment_datetime}
-        • Type: {appointment_type}
-        • Duration: {duration} minutes
-        • Location: {location}
+        • Date & Time: {data.appointment_datetime}
+        • Type: {data.appointment_type}
+        • Duration: {data.duration} minutes
+        • Location: {data.location}
         • Doctor: Dr. Fahmi
 
         IMPORTANT NOTES:
@@ -145,13 +141,7 @@ class EmailTemplates:
         )
 
     @staticmethod
-    def appointment_updated(
-        patient_name: str,
-        title: str,
-        start_datetime: datetime,
-        description: str,
-        location: str,
-    ) -> EmailContent:
+    def appointment_updated(data: UpdateAppointment) -> EmailContent:
         subject = f"📅 Appointment Updated - Klinik Sehat Bersama"
 
         html_body = f"""
@@ -165,15 +155,15 @@ class EmailTemplates:
                 </div>
 
                 <div style="background: #f9f9f9; padding: 20px;">
-                    <h3>Dear {patient_name},</h3>
+                    <h3>Dear {data.patient_name},</h3>
                     <p>Your appointment has been successfully updated!</p>
 
                     <div style="background: #fff3cd; padding: 15px; border-left: 4px solid #FF9800;">
                         <h4>📅 Updated Details:</h4>
-                        <p><strong>Summary:</strong> {title}</p>
-                        <p><strong>New:</strong> {start_datetime}</p>
-                        <p><strong>Description:</strong> {description}</p>
-                        <p><strong>Location:</strong> {location}</p>
+                        <p><strong>Summary:</strong> {data.title}</p>
+                        <p><strong>New:</strong> {data.new_datetime}</p>
+                        <p><strong>Description:</strong> {data.description}</p>
+                        <p><strong>Location:</strong> {data.location}</p>
                     </div>
 
                     <p>If you have any questions, please contact us.</p>
@@ -186,14 +176,14 @@ class EmailTemplates:
         text_body = f"""
         Klinik Sehat Bersama - Appointment Updated
 
-        Dear {patient_name},
+        Dear {data.patient_name},
 
         Your appointment has been updated:
 
-        Summary: {title}
-        New Date: {start_datetime}
-        Description: {description}
-        Location: {location}
+        Summary: {data.title}
+        New Date: {data.new_datetime}
+        Description: {data.description}
+        Location: {data.location}
 
         Contact us if you have any questions.
 
@@ -209,13 +199,7 @@ class EmailTemplates:
         )
 
     @staticmethod
-    def appointment_cancelled(
-        patient_name: str,
-        event_id: str,
-        appointment_datetime: datetime,
-        appointment_type: str,
-        reason: str = "",
-    ) -> EmailContent:
+    def appointment_cancelled(data: CancelAppointment) -> EmailContent:
         subject = f"❌ Appointment Cancelled - Klinik Sehat Bersama"
 
         html_body = f"""
@@ -229,15 +213,15 @@ class EmailTemplates:
                 </div>
 
                 <div style="background: #f9f9f9; padding: 20px;">
-                    <h3>Dear {patient_name},</h3>
+                    <h3>Dear {data.patient_name},</h3>
                     <p>Your appointment has been cancelled.</p>
 
                     <div style="background: #ffebee; padding: 15px; border-left: 4px solid #f44336;">
                         <h4>❌ Cancelled Appointment:</h4>
-                        <p><strong>Event ID:</strong> {event_id}</p>
-                        <p><strong>Date & Time:</strong> {appointment_datetime}</p>
-                        <p><strong>Type:</strong> {appointment_type}</p>
-                        {f"<p><strong>Reason:</strong> {reason}</p>" if reason else ""}
+                        <p><strong>Event ID:</strong> {data.event_id}</p>
+                        <p><strong>Date & Time:</strong> {data.appointment_datetime}</p>
+                        <p><strong>Type:</strong> {data.appointment_type}</p>
+                        <p><strong>Reason:</strong> {data.reason}</p>
                     </div>
 
                     <p>To reschedule, please contact us:</p>
@@ -252,13 +236,13 @@ class EmailTemplates:
         text_body = f"""
         Klinik Sehat Bersama - Appointment Cancelled
 
-        Dear {patient_name},
+        Dear {data.patient_name},
 
         Your appointment has been cancelled:
-        Event ID: {event_id}
-        Date & Time: {appointment_datetime}
-        Type: {appointment_type}
-        {f"Reason: {reason}" if reason else ""}
+        Event ID: {data.event_id}
+        Date & Time: {data.appointment_datetime}
+        Type: {data.appointment_type}
+        "Reason: {data.reason}
 
         To reschedule, contact us:
         Phone: +62 21 1234 5678
