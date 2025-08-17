@@ -1,11 +1,12 @@
 """Application settings for the agent."""
 
-from typing import List, Optional
-from pathlib import Path
 from functools import lru_cache
+from pathlib import Path
+from typing import List, Optional
+
+from dotenv import find_dotenv, load_dotenv
 from pydantic import model_validator
 from pydantic_settings import BaseSettings
-from dotenv import load_dotenv, find_dotenv
 
 _ = load_dotenv(find_dotenv())
 

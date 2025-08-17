@@ -1,11 +1,14 @@
 import smtplib
+from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from typing import Any, Dict
+
 from loguru import logger
-from datetime import datetime
-from typing import Dict, Any
-from .template_email import EmailContent, EmailTemplates
+
 from src.agent.setting import settings
+
+from .template_email import EmailContent, EmailTemplates
 
 
 class GmailServiceSMTP:

@@ -1,8 +1,9 @@
-from loguru import logger
 from typing import Optional
+
 from google.oauth2 import service_account
-from googleapiclient.discovery import build
-from googleapiclient.discovery import Resource
+from googleapiclient.discovery import Resource, build
+from loguru import logger
+
 from src.agent.setting import settings
 
 

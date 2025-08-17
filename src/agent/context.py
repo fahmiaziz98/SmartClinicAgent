@@ -8,7 +8,9 @@ to validate and manage agent context settings.
 from __future__ import annotations
 
 import os
-from pydantic import BaseModel, Field, ConfigDict
+
+from pydantic import BaseModel, ConfigDict, Field
+
 from . import prompt
 
 

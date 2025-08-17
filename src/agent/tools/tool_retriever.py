@@ -1,15 +1,17 @@
-import faiss
-from typing import Any, Callable, List
 from pathlib import Path
-from loguru import logger
-from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
-from langchain_community.vectorstores import FAISS
+from typing import Any, Callable, List
+
+import faiss
 from langchain_community.docstore.in_memory import InMemoryDocstore
 from langchain_community.document_loaders import UnstructuredMarkdownLoader
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-
+from langchain_community.embeddings.fastembed import FastEmbedEmbeddings
+from langchain_community.vectorstores import FAISS
 from langchain_core.tools import tool
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from loguru import logger
+
 from src.agent.setting import settings
+
 from .schema import InputKnowledgeBase
 
 

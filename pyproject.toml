@@ -10,6 +10,7 @@ dependencies = [
     "fastembed==0.7.1",
     "flake8>=7.3.0",
     "google-ai-generativelanguage==0.6.15",
+    "isort>=6.0.1",
     "langchain-community==0.3.27",
     "langchain[google-genai]==0.3.27",
     "langgraph==0.6.4",

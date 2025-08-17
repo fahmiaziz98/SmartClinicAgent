@@ -1,15 +1,14 @@
 """Human-in-the-loop (HITL) wrapper for LangGraph tools."""
 
 from typing import Callable, Optional, Union
-from loguru import logger
-from langchain_core.tools import BaseTool, tool as create_tool
+
 from langchain_core.runnables import RunnableConfig
+from langchain_core.tools import BaseTool
+from langchain_core.tools import tool as create_tool
+from langgraph.prebuilt.interrupt import (ActionRequest, HumanInterrupt,
+                                          HumanInterruptConfig)
 from langgraph.types import interrupt
-from langgraph.prebuilt.interrupt import (
-    HumanInterruptConfig,
-    HumanInterrupt,
-    ActionRequest,
-)
+from loguru import logger
 
 
 def human_in_the_loop(

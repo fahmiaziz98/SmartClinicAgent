@@ -1,13 +1,13 @@
-import pytz
-from loguru import logger
 from datetime import datetime, time, timedelta
 from typing import Any, Dict
 
+import pytz
 from googleapiclient.errors import HttpError
+from loguru import logger
+
 from src.agent.core import CALENDAR_SERVICE
 from src.agent.setting import settings
 from src.agent.utils import format_event_details
-
 
 DOCTOR_SCHEDULE = {
     0: (time(16, 0), time(20, 0)),

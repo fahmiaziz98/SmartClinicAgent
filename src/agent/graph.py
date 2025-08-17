@@ -7,14 +7,14 @@ from datetime import datetime
 from typing import Dict, List, Literal, cast
 
 import pytz
-from loguru import logger
 from langchain_core.messages import AIMessage
 from langgraph.graph import StateGraph
 from langgraph.prebuilt import ToolNode
 from langgraph.runtime import Runtime
+from loguru import logger
 
 from src.agent.context import Context
-from src.agent.state import State, InputState
+from src.agent.state import InputState, State
 from src.agent.tools import TOOLS_CALENDAR, TOOLS_KNOWLEDGE_BASE
 from src.agent.utils import load_chat_model
 

@@ -10,8 +10,9 @@ def run_command(cmd):
 def main():
     commands = [
         "black src/",
+        "isort src/",
         # "flake8 src/agent/", 
-        # "pylint src/"
+        "pylint src/"
     ]
     
     all_passed = True
