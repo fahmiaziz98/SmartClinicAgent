@@ -1,12 +1,16 @@
 import smtplib
-from datetime import datetime
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from typing import Any, Dict
 
 from loguru import logger
 
-from src.agent.setting import settings
+from agent.setting import settings
+from agent.model.models_email import (
+    CancelAppointment,
+    SendAppointment,
+    UpdateAppointment,
+)
 
 from .template_email import EmailContent, EmailTemplates
 
@@ -62,61 +66,44 @@ class EmailNotificationService:
         self.primary_provider = GmailServiceSMTP()
         logger.info("Email service initialized")
 
-    def send_appointment_created(
-        self,
-        event_id: str,
-        patient_name: str,
-        patient_email: str,
-        appointment_datetime: datetime,
-        appointment_type: str,
-        duration: int,
-        location: str,
-    ) -> Dict[str, Any]:
+    def send_appointment_created(self, data: SendAppointment) -> Dict[str, Any]:
         """Send appointment confirmation email"""
         template = EmailTemplates.appointment_created(
-            patient_name,
-            event_id,
-            appointment_datetime,
-            appointment_type,
-            duration,
-            location,
+            data.patient_name,
+            data.event_id,
+            data.appointment_datetime,
+            data.appointment_type,
+            data.duration,
+            data.location,
         )
 
-        template.recipients = [patient_email]
+        template.recipients = [data.patient_email]
 
         result = self.primary_provider.send_email(template)
         return result
 
-    def send_appointment_updated(
-        self,
-        patient_name: str,
-        title: str,
-        patient_email: str,
-        new_datetime: datetime,
-        description: str,
-        location: str,
-    ) -> Dict[str, Any]:
+    def send_appointment_updated(self, data: UpdateAppointment) -> Dict[str, Any]:
         """Send appointment update email"""
         template = EmailTemplates.appointment_updated(
-            patient_name, title, new_datetime, description, location
+            data.patient_name,
+            data.title,
+            data.new_datetime,
+            data.description,
+            data.location,
         )
-        template.recipients = [patient_email]
+        template.recipients = [data.patient_email]
         return self.primary_provider.send_email(template)
 
-    def send_appointment_cancelled(
-        self,
-        patient_name: str,
-        event_id: str,
-        patient_email: str,
-        appointment_datetime: datetime,
-        appointment_type: str,
-        reason: str = "",
-    ) -> Dict[str, Any]:
+    def send_appointment_cancelled(self, data: CancelAppointment) -> Dict[str, Any]:
         """Send appointment cancellation email"""
         template = EmailTemplates.appointment_cancelled(
-            patient_name, event_id, appointment_datetime, appointment_type, reason
+            data.patient_name,
+            data.event_id,
+            data.appointment_datetime,
+            data.appointment_type,
+            data.reason,
         )
-        template.recipients = [patient_email]
+        template.recipients = [data.patient_email]
         return self.primary_provider.send_email(template)
 
 
