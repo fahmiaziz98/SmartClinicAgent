@@ -8,15 +8,18 @@ from loguru import logger
 
 from src.agent.core import CALENDAR_SERVICE, EMAIL_SERVICE
 from src.agent.hitl import human_in_the_loop
-from src.agent.model import (CancelAppointment, SendAppointment,
-                             UpdateAppointment)
+from src.agent.model import CancelAppointment, SendAppointment, UpdateAppointment
 from src.agent.setting import settings
 from src.agent.utils import format_event, format_event_details
 
 from .helper import create_event, is_within_doctor_schedule
-from .schema import (InputCancelAppointment, InputCreateAppointment,
-                     InputGetDoctorSchedule, InputGetEventById,
-                     InputUpdateAppointment)
+from .schema import (
+    InputCancelAppointment,
+    InputCreateAppointment,
+    InputGetDoctorSchedule,
+    InputGetEventById,
+    InputUpdateAppointment,
+)
 
 
 @tool(

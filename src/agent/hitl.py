@@ -5,8 +5,11 @@ from typing import Callable, Optional, Union
 from langchain_core.runnables import RunnableConfig
 from langchain_core.tools import BaseTool
 from langchain_core.tools import tool as create_tool
-from langgraph.prebuilt.interrupt import (ActionRequest, HumanInterrupt,
-                                          HumanInterruptConfig)
+from langgraph.prebuilt.interrupt import (
+    ActionRequest,
+    HumanInterrupt,
+    HumanInterruptConfig,
+)
 from langgraph.types import interrupt
 from loguru import logger
 

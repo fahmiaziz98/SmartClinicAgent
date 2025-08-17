@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from typing import List
 
-from src.agent.model import (CancelAppointment, SendAppointment, 
-                                          UpdateAppointment)
+from src.agent.model import CancelAppointment, SendAppointment, UpdateAppointment
 
 
 @dataclass
