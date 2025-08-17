@@ -28,7 +28,7 @@ class Settings(BaseSettings):
     CALENDAR_ID: str
     SERVICE_ACCOUNT_FILE: str
     SCOPES_CALENDER: List[str] = ["https://www.googleapis.com/auth/calendar"]
-    GOOGLE_APPLICATION_CREDENTIALS: Optional[str] = None  
+    GOOGLE_APPLICATION_CREDENTIALS: Optional[str] = None
 
     # Storage Configuration
     FAISS_INDEX: str = str(BASE_DIR / "fais_index")
@@ -46,7 +46,9 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def set_google_credentials(self) -> "Settings":
         if self.SERVICE_ACCOUNT_FILE:
-            self.GOOGLE_APPLICATION_CREDENTIALS = str(self.BASE_DIR / self.SERVICE_ACCOUNT_FILE)
+            self.GOOGLE_APPLICATION_CREDENTIALS = str(
+                self.BASE_DIR / self.SERVICE_ACCOUNT_FILE
+            )
         return self
 
     def __init__(self, **kwargs):

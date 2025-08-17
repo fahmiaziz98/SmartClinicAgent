@@ -1,7 +1,7 @@
 """Context configuration for the agent.
 
-This module defines the `Context` class which provides system prompts 
-and model configuration for the agent. It is built on top of Pydantic's BaseModel 
+This module defines the `Context` class which provides system prompts
+and model configuration for the agent. It is built on top of Pydantic's BaseModel
 to validate and manage agent context settings.
 """
 

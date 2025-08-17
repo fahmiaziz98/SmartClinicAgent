@@ -12,6 +12,7 @@ class GmailServiceSMTP:
     """
     Gmail SMTP service for sending emails.
     """
+
     def __init__(self):
         self.email = settings.ACCOUNT_GMAIL
         self.app_password = settings.PASSWORD_GMAIL
@@ -21,14 +22,14 @@ class GmailServiceSMTP:
     def send_email(self, content: EmailContent) -> Dict[str, Any]:
         try:
             # Create message
-            msg = MIMEMultipart('alternative')
-            msg['From'] = f"{content.sender_name} <{self.email}>"
-            msg['To'] = ", ".join(content.recipients)
-            msg['Subject'] = content.subject
+            msg = MIMEMultipart("alternative")
+            msg["From"] = f"{content.sender_name} <{self.email}>"
+            msg["To"] = ", ".join(content.recipients)
+            msg["Subject"] = content.subject
 
             # Add HTML and plain text parts
-            text_part = MIMEText(content.text_body, 'plain', 'utf-8')
-            html_part = MIMEText(content.html_body, 'html', 'utf-8')
+            text_part = MIMEText(content.text_body, "plain", "utf-8")
+            html_part = MIMEText(content.html_body, "html", "utf-8")
 
             msg.attach(text_part)
             msg.attach(html_part)
@@ -53,6 +54,7 @@ class GmailServiceSMTP:
 
 class EmailNotificationService:
     """Main email service with provider switching"""
+
     def __init__(self):
         self.primary_provider = GmailServiceSMTP()
         logger.info("Email service initialized")
@@ -65,16 +67,16 @@ class EmailNotificationService:
         appointment_datetime: datetime,
         appointment_type: str,
         duration: int,
-        location: str
+        location: str,
     ) -> Dict[str, Any]:
         """Send appointment confirmation email"""
         template = EmailTemplates.appointment_created(
-                patient_name,
-                event_id,
-                appointment_datetime,
-                appointment_type,
-                duration,
-                location
+            patient_name,
+            event_id,
+            appointment_datetime,
+            appointment_type,
+            duration,
+            location,
         )
 
         template.recipients = [patient_email]
@@ -82,21 +84,18 @@ class EmailNotificationService:
         result = self.primary_provider.send_email(template)
         return result
 
-    def send_appointment_updated(self,
+    def send_appointment_updated(
+        self,
         patient_name: str,
         title: str,
         patient_email: str,
         new_datetime: datetime,
         description: str,
-        location: str
+        location: str,
     ) -> Dict[str, Any]:
         """Send appointment update email"""
         template = EmailTemplates.appointment_updated(
-            patient_name,
-            title,
-            new_datetime,
-            description,
-            location
+            patient_name, title, new_datetime, description, location
         )
         template.recipients = [patient_email]
         return self.primary_provider.send_email(template)
@@ -108,7 +107,7 @@ class EmailNotificationService:
         patient_email: str,
         appointment_datetime: datetime,
         appointment_type: str,
-        reason: str = ""
+        reason: str = "",
     ) -> Dict[str, Any]:
         """Send appointment cancellation email"""
         template = EmailTemplates.appointment_cancelled(

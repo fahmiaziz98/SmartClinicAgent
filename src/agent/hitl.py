@@ -5,13 +5,17 @@ from loguru import logger
 from langchain_core.tools import BaseTool, tool as create_tool
 from langchain_core.runnables import RunnableConfig
 from langgraph.types import interrupt
-from langgraph.prebuilt.interrupt import HumanInterruptConfig, HumanInterrupt, ActionRequest
+from langgraph.prebuilt.interrupt import (
+    HumanInterruptConfig,
+    HumanInterrupt,
+    ActionRequest,
+)
 
 
 def human_in_the_loop(
     tool: Union[Callable, BaseTool],
     *,
-    interrupt_config: Optional[HumanInterruptConfig] = None
+    interrupt_config: Optional[HumanInterruptConfig] = None,
 ) -> BaseTool:
     """
     Wrap a tool with human-in-the-loop (HITL) functionality.
@@ -29,10 +33,10 @@ def human_in_the_loop(
 
     if interrupt_config is None:
         interrupt_config = HumanInterruptConfig(
-            allow_ignore=False,   # Disallow skipping this step
-            allow_respond=True,   # Allow text feedback
-            allow_edit=True,      # Allow editing
-            allow_accept=True     # Allow direct acceptance
+            allow_ignore=False,  # Disallow skipping this step
+            allow_respond=True,  # Allow text feedback
+            allow_edit=True,  # Allow editing
+            allow_accept=True,  # Allow direct acceptance
         )
 
     @create_tool(
@@ -44,11 +48,11 @@ def human_in_the_loop(
         logger.info(f"Using interrupt tool {tool.name}")
         request = HumanInterrupt(
             action_request=ActionRequest(
-                action=tool.name,   # The action being requested
-                args=tool_input     # Arguments for the action
+                action=tool.name,  # The action being requested
+                args=tool_input,  # Arguments for the action
             ),
             config=interrupt_config,
-            description="Please review the command before execution"
+            description="Please review the command before execution",
         )
 
         response = interrupt([request])[0]

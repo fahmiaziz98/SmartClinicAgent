@@ -105,7 +105,6 @@ def is_within_doctor_schedule(
             f"at {appointment_end.strftime('%H:%M')}"
         )
 
-
     logger.info("✅ Appointment is within doctor's schedule")
     return True
 
@@ -160,7 +159,6 @@ def create_event(
             )
             .execute()
         )
-
 
         formatted_event = format_event_details(event)
 

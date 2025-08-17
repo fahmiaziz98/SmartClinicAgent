@@ -1,10 +1,12 @@
 from datetime import datetime
 from dataclasses import dataclass
-from typing import  List
+from typing import List
+
 
 @dataclass
 class EmailContent:
     """Email content structure"""
+
     subject: str
     html_body: str
     text_body: str
@@ -22,7 +24,7 @@ class EmailTemplates:
         appointment_datetime: datetime,
         appointment_type: str,
         duration: int,
-        location: str
+        location: str,
     ) -> EmailContent:
         subject = f"✅ Appointment Confirmed - Klinik Sehat Bersama"
 
@@ -139,9 +141,8 @@ class EmailTemplates:
             html_body=html_body,
             text_body=text_body,
             recipients=[],
-            sender_name="Alicia Clinical Assistant"
+            sender_name="Alicia Clinical Assistant",
         )
-
 
     @staticmethod
     def appointment_updated(
@@ -149,7 +150,7 @@ class EmailTemplates:
         title: str,
         start_datetime: datetime,
         description: str,
-        location: str
+        location: str,
     ) -> EmailContent:
         subject = f"📅 Appointment Updated - Klinik Sehat Bersama"
 
@@ -204,7 +205,7 @@ class EmailTemplates:
             html_body=html_body,
             text_body=text_body,
             recipients=[],
-            sender_name="Alicia Clinical Assistance"
+            sender_name="Alicia Clinical Assistance",
         )
 
     @staticmethod
@@ -213,7 +214,7 @@ class EmailTemplates:
         event_id: str,
         appointment_datetime: datetime,
         appointment_type: str,
-        reason: str = ""
+        reason: str = "",
     ) -> EmailContent:
         subject = f"❌ Appointment Cancelled - Klinik Sehat Bersama"
 
@@ -271,5 +272,5 @@ class EmailTemplates:
             html_body=html_body,
             text_body=text_body,
             recipients=[],
-            sender_name="Alicia Clinical Assistance"
+            sender_name="Alicia Clinical Assistance",
         )
