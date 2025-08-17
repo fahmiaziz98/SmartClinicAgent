@@ -23,7 +23,7 @@ dependencies = [
 ]
 
 [tool.ruff]
-line-length = 88
+line-length = 220
 
 [tool.ruff.lint]
 select = ["E501", "I"]
