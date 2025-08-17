@@ -1,8 +1,7 @@
 from dataclasses import dataclass
-from datetime import datetime
 from typing import List
 
-from src.agent.model.models_email import (CancelAppointment, SendAppointment, 
+from src.agent.model import (CancelAppointment, SendAppointment, 
                                           UpdateAppointment)
 
 

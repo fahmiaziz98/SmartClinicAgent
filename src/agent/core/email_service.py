@@ -5,7 +5,7 @@ from typing import Any, Dict
 
 from loguru import logger
 
-from src.agent.model.models_email import (CancelAppointment, SendAppointment,
+from src.agent.model import (CancelAppointment, SendAppointment,
                                           UpdateAppointment)
 from src.agent.setting import settings
 
