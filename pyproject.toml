@@ -21,5 +21,6 @@ dependencies = [
     "pylint>=3.3.8",
     "python-dotenv>=1.1.1",
     "pytz>=2025.2",
+    "ruff>=0.12.9",
     "unstructured==0.18.11",
 ]

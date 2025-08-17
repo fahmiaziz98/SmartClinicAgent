@@ -21,7 +21,7 @@ class EmailTemplates:
 
     @staticmethod
     def appointment_created(data: SendAppointment) -> EmailContent:
-        subject = f"✅ Appointment Confirmed - Klinik Sehat Bersama"
+        subject = "✅ Appointment Confirmed - Klinik Sehat Bersama"
 
         html_body = f"""
         <!DOCTYPE html>
@@ -141,7 +141,7 @@ class EmailTemplates:
 
     @staticmethod
     def appointment_updated(data: UpdateAppointment) -> EmailContent:
-        subject = f"📅 Appointment Updated - Klinik Sehat Bersama"
+        subject = "📅 Appointment Updated - Klinik Sehat Bersama"
 
         html_body = f"""
         <!DOCTYPE html>
@@ -199,7 +199,7 @@ class EmailTemplates:
 
     @staticmethod
     def appointment_cancelled(data: CancelAppointment) -> EmailContent:
-        subject = f"❌ Appointment Cancelled - Klinik Sehat Bersama"
+        subject = "❌ Appointment Cancelled - Klinik Sehat Bersama"
 
         html_body = f"""
         <!DOCTYPE html>
