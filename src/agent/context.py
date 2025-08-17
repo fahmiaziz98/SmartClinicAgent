@@ -11,14 +11,14 @@ import os
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import prompt
+from .prompt import SYSTEM_PROMPT
 
 
 class Context(BaseModel):
     """The context for the agent."""
 
     system_prompt: str = Field(
-        default_factory=lambda: prompt.SYSTEM_PROMPT,
+        default_factory=lambda: SYSTEM_PROMPT,
         description="System prompt that sets the agent's behavior.",
     )
     model: str = Field(
