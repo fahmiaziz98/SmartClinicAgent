@@ -10,8 +10,7 @@ def run_command(cmd):
 def main():
     commands = [
         "black src/",
-        "isort src/",
-        # "flake8 src/agent/", 
+        "isort src/", 
         "pylint src/"
     ]
     
