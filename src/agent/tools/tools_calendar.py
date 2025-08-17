@@ -8,6 +8,8 @@ from loguru import logger
 
 from src.agent.core import CALENDAR_SERVICE, EMAIL_SERVICE
 from src.agent.hitl import human_in_the_loop
+from src.agent.model import (CancelAppointment, SendAppointment,
+                             UpdateAppointment)
 from src.agent.setting import settings
 from src.agent.utils import format_event, format_event_details
 
@@ -135,8 +137,6 @@ def create_doctor_appointment(
     duration_minutes: int = 30,
     appointment_type: str = "Consultation",
     symptoms: Optional[str] = "",
-    notes: Optional[str] = "",
-    phone_number: Optional[str] = "",
 ):
     """
     Use this tool to create an appointment with a doctor.
@@ -149,8 +149,6 @@ def create_doctor_appointment(
         duration_minutes: Duration of the appointment in minutes
         appointment_type: Type of the appointment
         symptoms: Symptoms of the patient
-        notes: Notes for the appointment
-        phone_number: Phone number of the patient
 
     Returns:
         Dict contains:
@@ -187,10 +185,6 @@ def create_doctor_appointment(
         ]
         if symptoms:
             description.append(f"Symptoms: {symptoms}")
-        if notes:
-            description.append(f"Notes: {notes}")
-        if phone_number:
-            description.append(f"Phone Number: {phone_number}")
 
         descriptions = "\n".join(description)
 
@@ -204,7 +198,7 @@ def create_doctor_appointment(
         )
 
         if result["success"]:
-            EMAIL_SERVICE.send_appointment_created(
+            appointment_data = SendAppointment(
                 event_id=result["event_id"],
                 patient_name=patient_name,
                 patient_email=patient_email,
@@ -215,6 +209,7 @@ def create_doctor_appointment(
                 duration=duration_minutes,
                 location="Klinik Sehat Bersama, Jl. Merdeka No. 123, Jakarta Pusat",
             )
+            EMAIL_SERVICE.send_appointment_created(appointment_data)
 
             return {
                 "success": True,
@@ -329,7 +324,7 @@ def update_doctor_appointment(
         formatted_event = format_event_details(updated_event)
         logger.success("Success update appointment...")
         if formatted_event:
-            EMAIL_SERVICE.send_appointment_updated(
+            update_appointment = UpdateAppointment(
                 patient_name=patient_name,
                 patient_email=patient_email,
                 title=formatted_event["title"],
@@ -337,6 +332,7 @@ def update_doctor_appointment(
                 description=formatted_event["description"],
                 location=formatted_event["location"],
             )
+            EMAIL_SERVICE.send_appointment_updated(update_appointment)
 
         return {
             "success": True,
@@ -386,14 +382,15 @@ def cancel_doctor_appointment(
         )
 
         logger.success("Success delete appointment...")
-        EMAIL_SERVICE.send_appointment_cancelled(
+        cancel_appointment = CancelAppointment(
             patient_name=patient_name,
-            event_id=event_id,
             patient_email=patient_email,
+            event_id=event_id,
             appointment_datetime=appointment_datetime.strftime("%d %B %Y, %H:%M WIB"),
             appointment_type=appointment_type,
             reason=reason,
         )
+        EMAIL_SERVICE.send_appointment_cancelled(cancel_appointment)
         return {"success": True, "message": f'Appointment "{event_id}" success deleted'}
 
     except HttpError as error:
