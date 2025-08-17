@@ -24,3 +24,13 @@ dependencies = [
     "ruff>=0.12.9",
     "unstructured==0.18.11",
 ]
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+select = ["E501", "I"]
+
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 88
