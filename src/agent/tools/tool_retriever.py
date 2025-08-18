@@ -25,8 +25,8 @@ class VectorStoreRetriever:
         self,
         path_docs: str = settings.DOCS_PATH,
         index_dir: str = settings.FAISS_INDEX,
-        chunk_size: int = 500,
-        chunk_overlap: int = 100,
+        chunk_size: int = 256,
+        chunk_overlap: int = 50,
     ):
         self.path_docs = Path(path_docs)
         self.embeddings = FastEmbedEmbeddings()
@@ -99,10 +99,8 @@ retriever = VECTORESTORE.load_retriever()
 @tool("knowledge_base_tool", args_schema=InputKnowledgeBase)
 def knowledge_base_tool(query: str):
     """
-    Use this tool to answer questions related to the clinic’s knowledge base,
-    such as operating hours, address, available services, diagnoses,
-    and other clinic-related information.
-    The tool retrieves relevant content from stored documents and returns the most relevant excerpts to the user.
+    Retrieve clinic-related info (hours, address, services, diagnoses, etc.)
+    from stored documents and return the most relevant excerpts.
     """
     logger.info(f"Searching query: {query}")
     docs = retriever.invoke(query)

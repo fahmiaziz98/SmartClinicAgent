@@ -22,35 +22,15 @@ from .schema import (
 )
 
 
-@tool(
-    "get_doctor_schedule_appointments",
-    args_schema=InputGetDoctorSchedule,
-    return_direct=True,
-)
+@tool("get_doctor_schedule_appointments", args_schema=InputGetDoctorSchedule)
 def get_doctor_schedule_appointments(
     start_datetime: datetime,
     end_datetime: datetime,
     max_results: int = 30,
 ) -> Dict[str, Any]:
     """
-    Use this tool exclusively to retrieve the doctor’s appointment schedule,
-    such as available dates and times.
-    This tool is not intended for looking up patient records or personal details.
-    Its primary purpose is to provide schedule information
-    that can help patients choose a suitable time
-    when creating a new appointment
-
-    Args:
-        start_datetime: The start time for searching events.
-        end_datetime: The end time for searching events.
-        max_results: The maximum number of events to return.
-
-    Returns:
-        Dict containing:
-        - success: Boolean operation status
-        - events: List of events
-        - count: Number of events found
-        - message: Status message
+    Use this tool Retrieve doctor’s available dates and times for appointments. 
+    Not for patient records.
     """
     try:
         logger.info("Using tools get_doctor_schedule_appointments")
@@ -92,20 +72,11 @@ def get_doctor_schedule_appointments(
         }
 
 
-@tool("get_event_by_id", args_schema=InputGetEventById, return_direct=True)
+@tool("get_event_by_id", args_schema=InputGetEventById)
 def get_event_by_id(event_id: str) -> Dict[str, Any]:
     """
     Use this tool when the user requests to search for an event by ID.
     It retrieves all available details for the specified event.
-
-    Args:
-        event_id: ID of the event to retrieve
-
-    Returns:
-        Dict containing:
-        - Success: Boolean the status of the operation
-        - event: Full event details
-        - message: Status message
     """
     try:
         logger.info("Using tool get_event_by_id")
@@ -130,9 +101,7 @@ def get_event_by_id(event_id: str) -> Dict[str, Any]:
         return {"success": False, "event": None, "message": f"Error get event: {error}"}
 
 
-@tool(
-    "create_doctor_appointment", args_schema=InputCreateAppointment, return_direct=True
-)
+@tool("create_doctor_appointment", args_schema=InputCreateAppointment)
 def create_doctor_appointment(
     patient_name: str,
     patient_email: str,
@@ -144,19 +113,6 @@ def create_doctor_appointment(
     """
     Use this tool to create an appointment with a doctor.
     This tool is specifically designed for managing doctor appointment creation
-
-    Args:
-        patient_name: Name of the patient
-        patient_email: Email of the patient
-        appointment_datetime: Date and time of the appointment
-        duration_minutes: Duration of the appointment in minutes
-        appointment_type: Type of the appointment
-        symptoms: Symptoms of the patient
-
-    Returns:
-        Dict contains:
-        - success: Boolean operation status
-        - message: Status message
     """
     try:
         is_within_doctor_schedule(appointment_datetime, duration_minutes)
@@ -229,9 +185,7 @@ def create_doctor_appointment(
         }
 
 
-@tool(
-    "update_doctor_appointment", args_schema=InputUpdateAppointment, return_direct=True
-)
+@tool("update_doctor_appointment", args_schema=InputUpdateAppointment)
 def update_doctor_appointment(
     event_id: str,
     patient_name: str,
@@ -243,24 +197,8 @@ def update_doctor_appointment(
     location: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Use this tool to update an existing appointment in Google Calendar.
-    Only the specified fields will be updated;
-    all other fields will remain unchanged.
-
-    Args:
-        event_id: ID of the event to be updated
-        title: New title (optional)
-        start_datetime: New start time (optional)
-        end_datetime: New end time (optional)
-        description: New description (optional)
-        location: New location (optional)
-        attendees: List of new attendees (optional)
-
-    Returns:
-        Dict contains:
-        - success: Boolean the status of the operation
-        - Event: Event details after update
-        - message: Status message
+    Use this tool to Update specific fields of an existing Google Calendar event; 
+    others remain unchanged.
     """
     if start_datetime is not None:
         duration_minutes = 30
@@ -347,9 +285,7 @@ def update_doctor_appointment(
         return {"success": False, "message": f"Error update appointment: {error}"}
 
 
-@tool(
-    "cancel_doctor_appointment", args_schema=InputCancelAppointment, return_direct=True
-)
+@tool("cancel_doctor_appointment", args_schema=InputCancelAppointment)
 def cancel_doctor_appointment(
     event_id: str,
     reason: str,
@@ -360,21 +296,6 @@ def cancel_doctor_appointment(
 ) -> Dict[str, Any]:
     """
     Use this tool to Delete an event from Google Calendar.
-    This tool will permanently remove the event from the calendar.
-    All participants will be notified of the event cancellation.
-
-    Args:
-        event_id: ID of the event to be deleted
-        reason: Reason for deleting the event
-        patient_name: Name of the patient
-        patient_email: Email of the patient
-        appointment_datetime: Date and time of the appointment
-        appointment_type: Type of the appointment
-
-    Returns:
-        Dict containing:
-        - Success: Boolean the status of the operation
-        - Message: Status message
     """
     try:
         logger.info("Using tools cancel_doctor_appointment...")
