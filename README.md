@@ -13,6 +13,26 @@ Integrated with **Google Calendar** and **email services**, it ensures patients 
 * 🩺 **Doctor Information Lookup** – Retrieve schedules and details without patient data exposure.
 * 🤖 **Agentic AI Orchestration** – Uses multiple tools for intelligent workflow automation.
 
+## ReAct Pattern
+<div style="margin-bottom: 20px;">
+  <img src="static/studio_ui.png" alt="Example UI 1" style="width: 100%; border: 1px solid #ddd; border-radius: 8px;" />
+</div>
+
+## Challenges & Solutions
+### Latency
+
+* With **Gemini 2.5 Pro**, average response time (p50) was **4–5s**, which is too slow for real-time applications.
+* Switching to **Gemini 2.5 Flash** reduced latency to **2–4s** (p50, p95 <10s).
+
+| Model          | p50 Latency | p95 Latency | Notes                          |
+| -------------- | ----------- | ----------- | ------------------------------ |
+| Gemini 2.5 Pro | 4–5s      | >15s        | Too slow for real-time usage   |
+| Gemini 2.5 Flash   | 2–3s        | <10s        | Optimized without quality loss |
+
+### Model Trade-off
+
+* Transitioning to **Gemini Flash** delivered **significant latency improvement** with **no major quality degradation**.
+
 ## **🛠 Tech Stack**
 
 * **Python 3.12+**
