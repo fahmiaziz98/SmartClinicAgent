@@ -5,7 +5,7 @@ from mem0 import AsyncMemoryClient
 
 from src.agent.setting import settings
 
-CLIENT = AsyncMemoryClient(api_key=settings.MEM0_API_KEY)
+client = AsyncMemoryClient(api_key=settings.MEM0_API_KEY)
 
 
 async def search_memory(query: str, user_id: str) -> str:
@@ -21,7 +21,7 @@ async def search_memory(query: str, user_id: str) -> str:
     """
     logger.info(f"Searching memory for query: '{query}' (user: {user_id})")
     try:
-        memories = await CLIENT.search(query=query, user_id=user_id, top_k=10)
+        memories = await client.search(query=query, user_id=user_id, top_k=10)
         if not memories:
             return "No relevant memories found."
         context = "\n".join(f"- {memory['memory']}" for memory in memories)
@@ -36,7 +36,7 @@ async def save_memory_background(conversation: List[Dict], user_id: str, metadat
     Background memory save with proper async handling
     """
     try:
-        await CLIENT.add(
+        await client.add(
             conversation,
             user_id=user_id,
             metadata=metadata,
