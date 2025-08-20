@@ -18,6 +18,9 @@ class Settings(BaseSettings):
 
     BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
     GOOGLE_API_KEY: str
+    
+    # Mem0 API key
+    MEM0_API_KEY: str
 
     # Gmail service
     ACCOUNT_GMAIL: str
