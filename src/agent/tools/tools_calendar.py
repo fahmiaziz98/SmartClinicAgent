@@ -29,7 +29,7 @@ def get_doctor_schedule_appointments(
     max_results: int = 30,
 ) -> Dict[str, Any]:
     """
-    Use this tool Retrieve doctor’s available dates and times for appointments. 
+    Use this tool Retrieve doctor’s available dates and times for appointments.
     Not for patient records.
     """
     try:
@@ -81,11 +81,7 @@ def get_event_by_id(event_id: str) -> Dict[str, Any]:
     try:
         logger.info("Using tool get_event_by_id")
 
-        event = (
-            CALENDAR_SERVICE.events()
-            .get(calendarId=settings.CALENDAR_ID, eventId=event_id)
-            .execute()
-        )
+        event = CALENDAR_SERVICE.events().get(calendarId=settings.CALENDAR_ID, eventId=event_id).execute()
 
         formatted_event = format_event_details(event)
         logger.success("Succesfully get_event_by_id...")
@@ -161,9 +157,7 @@ def create_doctor_appointment(
                 event_id=result["event_id"],
                 patient_name=patient_name,
                 patient_email=patient_email,
-                appointment_datetime=appointment_datetime.strftime(
-                    "%d %B %Y, %H:%M WIB"
-                ),
+                appointment_datetime=appointment_datetime.strftime("%d %B %Y, %H:%M WIB"),
                 appointment_type=appointment_type,
                 duration=duration_minutes,
                 location="Klinik Sehat Bersama, Jl. Merdeka No. 123, Jakarta Pusat",
@@ -197,7 +191,7 @@ def update_doctor_appointment(
     location: Optional[str] = None,
 ) -> Dict[str, Any]:
     """
-    Use this tool to Update specific fields of an existing Google Calendar event; 
+    Use this tool to Update specific fields of an existing Google Calendar event;
     others remain unchanged.
     """
     if start_datetime is not None:
@@ -227,11 +221,7 @@ def update_doctor_appointment(
         timezone = "Asia/Jakarta"
         tz = pytz.timezone(timezone)
 
-        existing_event = (
-            CALENDAR_SERVICE.events()
-            .get(calendarId=settings.CALENDAR_ID, eventId=event_id)
-            .execute()
-        )
+        existing_event = CALENDAR_SERVICE.events().get(calendarId=settings.CALENDAR_ID, eventId=event_id).execute()
 
         # Update field yang diberikan
         if title is not None:
@@ -254,13 +244,7 @@ def update_doctor_appointment(
             }
 
         # Update event
-        updated_event = (
-            CALENDAR_SERVICE.events()
-            .update(
-                calendarId=settings.CALENDAR_ID, eventId=event_id, body=existing_event
-            )
-            .execute()
-        )
+        updated_event = CALENDAR_SERVICE.events().update(calendarId=settings.CALENDAR_ID, eventId=event_id, body=existing_event).execute()
 
         formatted_event = format_event_details(updated_event)
         logger.success("Success update appointment...")
@@ -299,11 +283,7 @@ def cancel_doctor_appointment(
     """
     try:
         logger.info("Using tools cancel_doctor_appointment...")
-        _ = (
-            CALENDAR_SERVICE.events()
-            .delete(calendarId=settings.CALENDAR_ID, eventId=event_id)
-            .execute()
-        )
+        _ = CALENDAR_SERVICE.events().delete(calendarId=settings.CALENDAR_ID, eventId=event_id).execute()
 
         logger.success("Success delete appointment...")
         cancel_appointment = CancelAppointment(

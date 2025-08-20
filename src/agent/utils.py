@@ -9,6 +9,7 @@ from langchain_core.language_models import BaseChatModel
 from langchain_core.messages import BaseMessage, ToolMessage
 from langchain_core.runnables import RunnableLambda
 from langgraph.prebuilt import ToolNode
+from loguru import logger
 
 
 def format_event_details(event: Dict) -> Dict:
@@ -50,12 +51,8 @@ def format_event(event: Dict) -> Dict:
     all_day = False
 
     if "dateTime" in start:
-        start_time = datetime.fromisoformat(
-            start["dateTime"].replace("Z", "+00:00")
-        ).astimezone(tz)
-        end_time = datetime.fromisoformat(
-            end["dateTime"].replace("Z", "+00:00")
-        ).astimezone(tz)
+        start_time = datetime.fromisoformat(start["dateTime"].replace("Z", "+00:00")).astimezone(tz)
+        end_time = datetime.fromisoformat(end["dateTime"].replace("Z", "+00:00")).astimezone(tz)
     elif "date" in start:
         start_time = datetime.fromisoformat(start["date"])
         end_time = datetime.fromisoformat(end["date"])
@@ -94,9 +91,16 @@ def handle_tool_error(state: dict) -> dict:
 
 def create_tool_node_with_fallback(tools: List[Any]) -> ToolNode:
     """Create a ToolNode with built-in error fallback."""
-    return ToolNode(tools).with_fallbacks(
-        [RunnableLambda(handle_tool_error)], exception_key="error"
-    )
+    return ToolNode(tools).with_fallbacks([RunnableLambda(handle_tool_error)], exception_key="error")
+
+
+def task_done_callback(task):
+    try:
+        result = task.result()
+        if result and "error" not in result:
+            logger.debug("Memory save completed successfully")
+    except Exception as e:
+        logger.error(f"Memory save task failed: {e}")
 
 
 def get_message_text(msg: BaseMessage) -> str:

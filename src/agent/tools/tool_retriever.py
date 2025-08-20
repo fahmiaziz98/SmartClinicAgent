@@ -35,9 +35,7 @@ class VectorStoreRetriever:
         self.chunk_overlap = chunk_overlap
 
         if self._index_exists():
-            logger.info(
-                f"FAISS index found in {self.index_dir}, loading instead of rebuilding."
-            )
+            logger.info(f"FAISS index found in {self.index_dir}, loading instead of rebuilding.")
             self.vector_store = self._load_vector_store()
         else:
             logger.info("No FAISS index found, building a new one.")
@@ -56,9 +54,7 @@ class VectorStoreRetriever:
         loader = UnstructuredMarkdownLoader(str(self.path_docs / "faq.md"))
         docs = loader.load()
 
-        splitter = RecursiveCharacterTextSplitter(
-            chunk_size=self.chunk_size, chunk_overlap=self.chunk_overlap
-        )
+        splitter = RecursiveCharacterTextSplitter(chunk_size=self.chunk_size, chunk_overlap=self.chunk_overlap)
         return splitter.split_documents(docs)
 
     def _build_vector_store(self):
@@ -82,9 +78,7 @@ class VectorStoreRetriever:
 
     def _load_vector_store(self):
         """Load existing FAISS index."""
-        return FAISS.load_local(
-            str(self.index_dir), self.embeddings, allow_dangerous_deserialization=True
-        )
+        return FAISS.load_local(str(self.index_dir), self.embeddings, allow_dangerous_deserialization=True)
 
     def load_retriever(self):
         """Return retriever wrapper around vector store."""

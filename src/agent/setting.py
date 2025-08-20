@@ -18,7 +18,7 @@ class Settings(BaseSettings):
 
     BASE_DIR: Path = Path(__file__).resolve().parent.parent.parent
     GOOGLE_API_KEY: str
-    
+
     # Mem0 API key
     MEM0_API_KEY: str
 
@@ -50,9 +50,7 @@ class Settings(BaseSettings):
     @model_validator(mode="after")
     def set_google_credentials(self) -> "Settings":
         if self.SERVICE_ACCOUNT_FILE:
-            self.GOOGLE_APPLICATION_CREDENTIALS = str(
-                self.BASE_DIR / self.SERVICE_ACCOUNT_FILE
-            )
+            self.GOOGLE_APPLICATION_CREDENTIALS = str(self.BASE_DIR / self.SERVICE_ACCOUNT_FILE)
         return self
 
     def __init__(self, **kwargs):

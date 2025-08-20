@@ -26,9 +26,7 @@ class ScheduleValidationError(Exception):
     pass
 
 
-def is_within_doctor_schedule(
-    appointment_datetime: datetime, duration_minutes: int = 30
-) -> bool:
+def is_within_doctor_schedule(appointment_datetime: datetime, duration_minutes: int = 30) -> bool:
     """
     Check if an appointment is within the doctor's schedule.
 
@@ -43,9 +41,7 @@ def is_within_doctor_schedule(
         ValueError: If duration_minutes is not positive
         ScheduleValidationError: If appointment is outside schedule with detailed reason
     """
-    logger.info(
-        f"Checking appointment: {appointment_datetime} (duration: {duration_minutes}min)"
-    )
+    logger.info(f"Checking appointment: {appointment_datetime} (duration: {duration_minutes}min)")
 
     # Input validation
     if duration_minutes <= 0:
@@ -64,20 +60,13 @@ def is_within_doctor_schedule(
             "Saturday",
             "Sunday",
         ]
-        raise ScheduleValidationError(
-            f"Doctor is not available on {day_names[weekday]}. "
-            f"Available days: Monday, Wednesday, Friday (16:00-20:00), Saturday (08:00-12:00)"
-        )
+        raise ScheduleValidationError(f"Doctor is not available on {day_names[weekday]}. Available days: Monday, Wednesday, Friday (16:00-20:00), Saturday (08:00-12:00)")
 
     start_time, end_time = schedule
 
     if appointment_datetime.tzinfo is not None:
-        start_dt = datetime.combine(
-            appointment_datetime.date(), start_time, tzinfo=appointment_datetime.tzinfo
-        )
-        end_dt = datetime.combine(
-            appointment_datetime.date(), end_time, tzinfo=appointment_datetime.tzinfo
-        )
+        start_dt = datetime.combine(appointment_datetime.date(), start_time, tzinfo=appointment_datetime.tzinfo)
+        end_dt = datetime.combine(appointment_datetime.date(), end_time, tzinfo=appointment_datetime.tzinfo)
     else:
         start_dt = datetime.combine(appointment_datetime.date(), start_time)
         end_dt = datetime.combine(appointment_datetime.date(), end_time)
@@ -85,25 +74,13 @@ def is_within_doctor_schedule(
     appointment_end = appointment_datetime + timedelta(minutes=duration_minutes)
 
     if appointment_datetime < start_dt:
-        raise ScheduleValidationError(
-            f"Appointment starts too early. "
-            f"Doctor starts at {start_time.strftime('%H:%M')} WIB, "
-            f"but appointment is at {appointment_datetime.strftime('%H:%M')}"
-        )
+        raise ScheduleValidationError(f"Appointment starts too early. Doctor starts at {start_time.strftime('%H:%M')} WIB, but appointment is at {appointment_datetime.strftime('%H:%M')}")
 
     if appointment_datetime >= end_dt:
-        raise ScheduleValidationError(
-            f"Appointment starts too late. Doctor ends at {end_time.strftime('%H:%M')} WIB, "
-            f"but appointment is at {appointment_datetime.strftime('%H:%M')}"
-        )
+        raise ScheduleValidationError(f"Appointment starts too late. Doctor ends at {end_time.strftime('%H:%M')} WIB, but appointment is at {appointment_datetime.strftime('%H:%M')}")
 
     if appointment_end > end_dt:
-        raise ScheduleValidationError(
-            f"Appointment ends too late. "
-            f"Doctor ends at {end_time.strftime('%H:%M')} WIB, "
-            f"but {duration_minutes}-minute appointment would end "
-            f"at {appointment_end.strftime('%H:%M')}"
-        )
+        raise ScheduleValidationError(f"Appointment ends too late. Doctor ends at {end_time.strftime('%H:%M')} WIB, but {duration_minutes}-minute appointment would end at {appointment_end.strftime('%H:%M')}")
 
     logger.info("✅ Appointment is within doctor's schedule")
     return True

@@ -47,9 +47,7 @@ class GoogleCalendarService:
 
     def _create_service(self) -> Resource:
         """Create Google Calendar service with credentials."""
-        credentials = service_account.Credentials.from_service_account_file(
-            settings.GOOGLE_APPLICATION_CREDENTIALS, scopes=settings.SCOPES_CALENDER
-        )
+        credentials = service_account.Credentials.from_service_account_file(settings.GOOGLE_APPLICATION_CREDENTIALS, scopes=settings.SCOPES_CALENDER)
         return build("calendar", "v3", credentials=credentials)
 
     def reset_service(self):
