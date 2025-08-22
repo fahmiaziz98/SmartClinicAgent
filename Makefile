@@ -1,3 +1,6 @@
+run:
+	langgraph dev --allow-blocking
+
 lint:
 	ruff check src/
 

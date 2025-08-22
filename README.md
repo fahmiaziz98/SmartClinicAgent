@@ -102,6 +102,10 @@ LANGSMITH_API_KEY="langsmith-api-key"
 
 ### 3. Launch LangGraph Server 🚀
 ```bash
+make run
+
+# or
+
 langgraph dev --allow-blocking
 
 # Sample Output
