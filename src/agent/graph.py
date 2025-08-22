@@ -21,6 +21,8 @@ from src.agent.state import InputState, State
 from src.agent.tools import TOOLS_CALENDAR, TOOLS_KNOWLEDGE_BASE
 from src.agent.utils import get_message_text, load_chat_model, task_done_callback
 
+logger.add("logger.log", rotation="10 MB", retention="10 days", level="DEBUG")
+
 
 async def call_model(
     state: State,
