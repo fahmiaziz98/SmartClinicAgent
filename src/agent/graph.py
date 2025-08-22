@@ -69,6 +69,7 @@ async def call_model(
         metadata = {"timestamp": datetime.now(tz=tz).strftime("%Y-%m-%d %H:%M:%S")}
 
         conversation = [
+            {"role": "system", "content": runtime.context.system_prompt_mem0},
             {"role": "user", "content": user_message},
             {"role": "assistant", "content": response.content},
         ]

@@ -11,7 +11,7 @@ import os
 
 from pydantic import BaseModel, ConfigDict, Field
 
-from .prompt import SYSTEM_PROMPT
+from .prompt import SYSTEM_PROMPT, SYSTEM_PROMPT_MEM0
 
 
 class Context(BaseModel):
@@ -20,6 +20,10 @@ class Context(BaseModel):
     system_prompt: str = Field(
         default_factory=lambda: SYSTEM_PROMPT,
         description="System prompt that sets the agent's behavior.",
+    )
+    system_prompt_mem0: str = Field(
+        default_factory=lambda: SYSTEM_PROMPT_MEM0,
+        description="Add a system prompt when saving the coversation history to better understand the context.",
     )
     model: str = Field(
         default_factory=lambda: os.getenv("MODEL", "google_genai/gemini-2.5-flash"),
