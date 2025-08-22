@@ -19,8 +19,8 @@ Integrated with **Google Calendar** and **email services**, it ensures patients 
 </div>
 
 ## Challenges & Solutions
-### Latency
-
+### LLM Optimization
+#### Latency
 * With **Gemini 2.5 Pro**, average response time (p50) was **4–5s**, which is too slow for real-time applications.
 * Switching to **Gemini 2.5 Flash** reduced latency to **2–4s** (p50, p95 <10s).
 
@@ -29,9 +29,15 @@ Integrated with **Google Calendar** and **email services**, it ensures patients 
 | Gemini 2.5 Pro | 4–5s      | >15s        | Too slow for real-time usage   |
 | Gemini 2.5 Flash   | 2–3s        | <10s        | Optimized without quality loss |
 
-### Model Trade-off
-
+#### Model Trade-off
 * Transitioning to **Gemini Flash** delivered **significant latency improvement** with **no major quality degradation**.
+----
+### Memory
+1. Challenge: Memory operations `(mem0.add())` take **1-12 seconds**, blocking user responses and creating poor user experience.
+2. Solution: Background Tasks: Using `asyncio.create_task()` makes the coroutine run simultaneously without waiting for it to finish.
+3. Pros & Cons
+    - Pros: Fast user response, better UX,
+    - Cons: Memory is not immediately available,
 
 ## **🛠 Tech Stack**
 
@@ -128,13 +134,10 @@ You can try the app at [https://agentchat.vercel.app/](https://agentchat.vercel.
 - [x] Sending `email with SMTP` (create-update-deleted)
 - [x] Add `rag tools`
 - [x] Add `human-interupt (approve/reject)`
-- [ ] Add `voice-based using elevenlabs/vapi`
+- [x] Add Long-Term Memory with `mem0/memU`
+- [x] Implement Chat-UI
 - [ ] Deploy on Docker
 - [ ] Deploy on Cloud
-- [x] Implement Chat-UI
-### Future
-- [ ] Implement New Agent Pattern
-- [ ] Add Long-Term Memory with `mem0/memU`
 
 ---
 ## 🤝 Contributing
